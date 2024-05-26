@@ -239,11 +239,11 @@
                 sprintName = firstIssue.fields.customfield_10007[0].name;
             }
 
-            document.getElementById('projectName').textContent = `Project: ${projectName}`;
+            document.getElementById('projectName').textContent = `${projectName}`;
 
             const issues = data.issues;
             const totalIssues = issues.length;
-            document.getElementById('sprintName').textContent = `${totalIssues} Issues in Current Sprint – ${sprintName}`;
+            document.getElementById('sprintName').textContent = `${totalIssues} Issues in ${sprintName}`;
 
             let storyCount = 0;
             let bugCount = 0;
