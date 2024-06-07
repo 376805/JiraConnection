@@ -1,0 +1,368 @@
+{
+  "issues": [
+    {
+      "key": "PLNT-13007",
+      "fields": {
+        "summary": "NIRMS IDCOMS: Refactor acceptance tests to remove reference to fluent assertions",
+        "status": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/status/3",
+          "description": "This issue is being worked on by the assignee.",
+          "iconUrl": "https://eaflood.atlassian.net/images/icons/statuses/inprogress.png",
+          "name": "In Dev",
+          "id": "3",
+          "statusCategory": {
+            "self": "https://eaflood.atlassian.net/rest/api/3/statuscategory/4",
+            "id": 4,
+            "key": "indeterminate",
+            "colorName": "yellow",
+            "name": "In Progress"
+          }
+        },
+        "issuetype": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/issuetype/10602",
+          "id": "10602",
+          "description": " In an agile development environment, code quality is intertwined into iterative development approach. Tech Debts are created when the team consciously takes a decision to ship out the code first due to real time project constraints and agree to refactor later. Tech Debts are used to prioritize speedy delivery over perfect code. Tech Debts DO NOT allow space for intentionally developing sub-standard code.",
+          "iconUrl": "https://eaflood.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10306?size=medium",
+          "name": "TechDebt",
+          "subtask": false,
+          "avatarId": 10306,
+          "hierarchyLevel": 0
+        },
+        "project": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/project/13397",
+          "id": "13397",
+          "key": "PLNT",
+          "name": "Trade: Plants",
+          "projectTypeKey": "software",
+          "simplified": false,
+          "avatarUrls": {
+            "48x48": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067",
+            "24x24": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=small",
+            "16x16": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=xsmall",
+            "32x32": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=medium"
+          },
+          "projectCategory": {
+            "self": "https://eaflood.atlassian.net/rest/api/3/projectCategory/10100",
+            "id": "10100",
+            "description": "International Trade",
+            "name": "EU International Trade"
+          }
+        },
+        "parent": "IDCOMS: NIRMS Automated Tests",
+        "storyPoints": null
+      }
+    },
+    {
+      "key": "PLNT-12458",
+      "fields": {
+        "summary": "Execute tests against CI with alternate feature flag values",
+        "status": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/status/3",
+          "description": "This issue is being worked on by the assignee.",
+          "iconUrl": "https://eaflood.atlassian.net/images/icons/statuses/inprogress.png",
+          "name": "In Dev",
+          "id": "3",
+          "statusCategory": {
+            "self": "https://eaflood.atlassian.net/rest/api/3/statuscategory/4",
+            "id": 4,
+            "key": "indeterminate",
+            "colorName": "yellow",
+            "name": "In Progress"
+          }
+        },
+        "issuetype": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/issuetype/10965",
+          "id": "10965",
+          "description": "A technical story",
+          "iconUrl": "https://eaflood.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10300?size=medium",
+          "name": "Tech Story",
+          "subtask": false,
+          "avatarId": 10300,
+          "hierarchyLevel": 0
+        },
+        "project": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/project/13397",
+          "id": "13397",
+          "key": "PLNT",
+          "name": "Trade: Plants",
+          "projectTypeKey": "software",
+          "simplified": false,
+          "avatarUrls": {
+            "48x48": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067",
+            "24x24": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=small",
+            "16x16": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=xsmall",
+            "32x32": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=medium"
+          },
+          "projectCategory": {
+            "self": "https://eaflood.atlassian.net/rest/api/3/projectCategory/10100",
+            "id": "10100",
+            "description": "International Trade",
+            "name": "EU International Trade"
+          }
+        },
+        "parent": "IDCOMS Technical Improvements",
+        "storyPoints": null
+      }
+    },
+    {
+      "key": "PLNT-13106",
+      "fields": {
+        "summary": "NIRMS IDCOMS :  \"My GB Spot Checks\" system view is missing filter condition",
+        "status": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://eaflood.atlassian.net/images/icons/subtask.gif",
+          "name": "Done",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://eaflood.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "Done"
+          }
+        },
+        "issuetype": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/issuetype/1",
+          "id": "1",
+          "description": "A problem or error.",
+          "iconUrl": "https://eaflood.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10303?size=medium",
+          "name": "Bug",
+          "subtask": false,
+          "avatarId": 10303,
+          "hierarchyLevel": 0
+        },
+        "project": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/project/13397",
+          "id": "13397",
+          "key": "PLNT",
+          "name": "Trade: Plants",
+          "projectTypeKey": "software",
+          "simplified": false,
+          "avatarUrls": {
+            "48x48": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067",
+            "24x24": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=small",
+            "16x16": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=xsmall",
+            "32x32": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=medium"
+          },
+          "projectCategory": {
+            "self": "https://eaflood.atlassian.net/rest/api/3/projectCategory/10100",
+            "id": "10100",
+            "description": "International Trade",
+            "name": "EU International Trade"
+          }
+        },
+        "parent": "NIRMS GB (Establishment) Spot Checks",
+        "storyPoints": null
+      }
+    },
+    {
+      "key": "PLNT-12943",
+      "fields": {
+        "summary": "NIRMS Send GB Spot Check Emails",
+        "status": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/status/10001",
+          "description": "",
+          "iconUrl": "https://eaflood.atlassian.net/images/icons/subtask.gif",
+          "name": "Done",
+          "id": "10001",
+          "statusCategory": {
+            "self": "https://eaflood.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "Done"
+          }
+        },
+        "issuetype": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/issuetype/10001",
+          "id": "10001",
+          "description": "Created by Jira Agile - do not edit or delete. Issue type for a user story.",
+          "iconUrl": "https://eaflood.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10315?size=medium",
+          "name": "Story",
+          "subtask": false,
+          "avatarId": 10315,
+          "hierarchyLevel": 0
+        },
+        "project": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/project/13397",
+          "id": "13397",
+          "key": "PLNT",
+          "name": "Trade: Plants",
+          "projectTypeKey": "software",
+          "simplified": false,
+          "avatarUrls": {
+            "48x48": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067",
+            "24x24": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=small",
+            "16x16": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=xsmall",
+            "32x32": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=medium"
+          },
+          "projectCategory": {
+            "self": "https://eaflood.atlassian.net/rest/api/3/projectCategory/10100",
+            "id": "10100",
+            "description": "International Trade",
+            "name": "EU International Trade"
+          }
+        },
+        "parent": "NIRMS GB (Establishment) Spot Checks",
+        "storyPoints": null
+      }
+    },
+    {
+      "key": "PLNT-13136",
+      "fields": {
+        "summary": "NIRMS IDCOMS: Review form permissions",
+        "status": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/status/6",
+          "description": "The issue is considered finished, the resolution is correct. Issues which are closed can be reopened.",
+          "iconUrl": "https://eaflood.atlassian.net/images/icons/statuses/closed.png",
+          "name": "Closed",
+          "id": "6",
+          "statusCategory": {
+            "self": "https://eaflood.atlassian.net/rest/api/3/statuscategory/3",
+            "id": 3,
+            "key": "done",
+            "colorName": "green",
+            "name": "Done"
+          }
+        },
+        "issuetype": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/issuetype/10965",
+          "id": "10965",
+          "description": "A technical story",
+          "iconUrl": "https://eaflood.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10300?size=medium",
+          "name": "Tech Story",
+          "subtask": false,
+          "avatarId": 10300,
+          "hierarchyLevel": 0
+        },
+        "project": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/project/13397",
+          "id": "13397",
+          "key": "PLNT",
+          "name": "Trade: Plants",
+          "projectTypeKey": "software",
+          "simplified": false,
+          "avatarUrls": {
+            "48x48": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067",
+            "24x24": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=small",
+            "16x16": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=xsmall",
+            "32x32": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=medium"
+          },
+          "projectCategory": {
+            "self": "https://eaflood.atlassian.net/rest/api/3/projectCategory/10100",
+            "id": "10100",
+            "description": "International Trade",
+            "name": "EU International Trade"
+          }
+        },
+        "parent": "NIRMS IDCOMS Backlog",
+        "storyPoints": null
+      }
+    },
+    {
+      "key": "PLNT-13148",
+      "fields": {
+        "summary": "NIRMS Update Work Order and GC Application System Views",
+        "status": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/status/14304",
+          "description": "",
+          "iconUrl": "https://eaflood.atlassian.net/images/icons/statuses/generic.png",
+          "name": "Ready for PO",
+          "id": "14304",
+          "statusCategory": {
+            "self": "https://eaflood.atlassian.net/rest/api/3/statuscategory/4",
+            "id": 4,
+            "key": "indeterminate",
+            "colorName": "yellow",
+            "name": "In Progress"
+          }
+        },
+        "issuetype": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/issuetype/10001",
+          "id": "10001",
+          "description": "Created by Jira Agile - do not edit or delete. Issue type for a user story.",
+          "iconUrl": "https://eaflood.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10315?size=medium",
+          "name": "Story",
+          "subtask": false,
+          "avatarId": 10315,
+          "hierarchyLevel": 0
+        },
+        "project": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/project/13397",
+          "id": "13397",
+          "key": "PLNT",
+          "name": "Trade: Plants",
+          "projectTypeKey": "software",
+          "simplified": false,
+          "avatarUrls": {
+            "48x48": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067",
+            "24x24": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=small",
+            "16x16": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=xsmall",
+            "32x32": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=medium"
+          },
+          "projectCategory": {
+            "self": "https://eaflood.atlassian.net/rest/api/3/projectCategory/10100",
+            "id": "10100",
+            "description": "International Trade",
+            "name": "EU International Trade"
+          }
+        },
+        "parent": "NIRMS Packing List Checks",
+        "storyPoints": null
+      }
+    },
+    {
+      "key": "PLNT-13139",
+      "fields": {
+        "summary": "NIRMS Automated Packing List Check Field Creation",
+        "status": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/status/14304",
+          "description": "",
+          "iconUrl": "https://eaflood.atlassian.net/images/icons/statuses/generic.png",
+          "name": "Ready for PO",
+          "id": "14304",
+          "statusCategory": {
+            "self": "https://eaflood.atlassian.net/rest/api/3/statuscategory/4",
+            "id": 4,
+            "key": "indeterminate",
+            "colorName": "yellow",
+            "name": "In Progress"
+          }
+        },
+        "issuetype": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/issuetype/10001",
+          "id": "10001",
+          "description": "Created by Jira Agile - do not edit or delete. Issue type for a user story.",
+          "iconUrl": "https://eaflood.atlassian.net/rest/api/2/universal_avatar/view/type/issuetype/avatar/10315?size=medium",
+          "name": "Story",
+          "subtask": false,
+          "avatarId": 10315,
+          "hierarchyLevel": 0
+        },
+        "project": {
+          "self": "https://eaflood.atlassian.net/rest/api/3/project/13397",
+          "id": "13397",
+          "key": "PLNT",
+          "name": "Trade: Plants",
+          "projectTypeKey": "software",
+          "simplified": false,
+          "avatarUrls": {
+            "48x48": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067",
+            "24x24": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=small",
+            "16x16": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=xsmall",
+            "32x32": "https://eaflood.atlassian.net/rest/api/3/universal_avatar/view/type/project/avatar/16067?size=medium"
+          },
+          "projectCategory": {
+            "self": "https://eaflood.atlassian.net/rest/api/3/projectCategory/10100",
+            "id": "10100",
+            "description": "International Trade",
+            "name": "EU International Trade"
+          }
+        },
+        "parent": "NIRMS Packing List Checks",
+        "storyPoints": null
+      }
+    }
+  ]
+}
