@@ -25,7 +25,7 @@
             border: 2px solid #ddd;
             padding: 0px;
             margin: 0px;
-            flex:   1 0 0%;
+            flex: 1 0 0%;
             text-align: center;
             position: relative;
             min-width: 10px;
@@ -98,8 +98,10 @@
         }
 
         .option1 {
-            display: inline-block;
-            padding-right: 0px;
+            display: table-row;
+            vertical-align: middle;
+            padding-inline: 10px;
+            padding-block:0.2%;
         } 
 
         @media (max-width: 600px) {
@@ -110,13 +112,14 @@
     </style>
 </head>
 <body>
-    <h1 id="projectName"></h1>
-    <h2 id="sprintName"></h2>
-    <h5 class="option1" id="sprintStartDate"></h5>
-    <h5 class="option1" id="sprintEndDate"></h5>
+    <h1 class="option1" id="projectName"></h1>
+    <h2 class="option1" id="sprintName"></h2>
+    <div class="option1" id="sprintStartDate"></div>
+    <div class="option1" id="sprintEndDate"></div>
     <div id="total-story-points"></div>
     <div id="completed-story-points"></div>
     <div id="in-progress-story-points"></div>
+    <div id="fix-version"</div>
 
     <div class="card-container">
         <div class="card" onclick="toggleTable('storyContent')">
@@ -158,9 +161,7 @@
                     <th>Issue Key</th>
                     <th>Summary</th>
                     <th>Status</th>
-                    <th>Epic</th>
                     <th>Story Point</th>
-
                 </tr>
             </thead>
             <tbody></tbody>
@@ -175,7 +176,6 @@
                     <th>Issue Key</th>
                     <th>Summary</th>
                     <th>Status</th>
-                    <th>Epic</th>
                     <th>Story Point</th>
                 </tr>
             </thead>
@@ -191,7 +191,6 @@
                     <th>Issue Key</th>
                     <th>Summary</th>
                     <th>Status</th>
-                    <th>Epic</th>
                     <th>Story Point</th>
                 </tr>
             </thead>
@@ -199,7 +198,7 @@
         </table>
     </div>
 
-    <button class="collapsible" onclick="toggleTable('techDebtContent', 'Tech Debt')">Tech Debt</button>
+    <button class="collapsible" onclick="toggleTable('techDebtContent', 'TechDebt')">TechDebt</button>
     <div class="content" id="techDebtContent">
         <table class="issue-table" id="techDebtTable">
             <thead>
@@ -207,7 +206,6 @@
                     <th>Issue Key</th>
                     <th>Summary</th>
                     <th>Status</th>
-                    <th>Epic</th>
                     <th>Story Point</th>
                 </tr>
             </thead>
@@ -223,7 +221,6 @@
                     <th>Issue Key</th>
                     <th>Summary</th>
                     <th>Status</th>
-                    <th>Epic</th>
                     <th>Story Point</th>
                 </tr>
             </thead>
@@ -249,8 +246,17 @@
             }
         }
 
-        document.addEventListener('DOMContentLoaded', async function () {
-            const response = await fetch('http://localhost:3000/jira');
+       document.addEventListener('DOMContentLoaded', async function () {
+            try {
+                const response = await fetch('https://376805.github.io/JiraConnection/issues.json', {
+                    mode: 'cors',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'Content-Type': 'application/json'
+                    }
+                });
+
             const data = await response.json();
 
             const firstIssue = data.issues ? data.issues[0] : null;
@@ -260,173 +266,102 @@
                 sprintName = firstIssue.fields.customfield_10007[0].name;
             }
 
-            document.getElementById('projectName').textContent = `${projectName}`;
+            document.getElementById('projectName').textContent = `${projectName} (NIRMS)`;
 
             const issues = data.issues;
-            const totalIssues = issues.length;
-
-            function calculateStoryPoints(issues) {
-                let total = 0;
-                let completed = 0;
-                let inProgress = 0;
-
-                issues.forEach(issue => {
-                    if (issue.fields && issue.fields.customfield_10005) {
-                        total += issue.fields.customfield_10005;
-                        if (issue.fields.status.name === "Done") {
-                            completed += issue.fields.customfield_10016;
-                        } else if (issue.fields.status.name === "In Progress") {
-                            inProgress += issue.fields.customfield_10005;
-                        }
-                    }
-                });
-
-                return { total, completed, inProgress };
-            }
-
-            // Get the story points
-            const { total, completed, inProgress } = calculateStoryPoints(data.issues);
-
-            document.getElementById('sprintName').textContent = `Current Sprint : ${sprintName} (${totalIssues} Issues & ${total} SP)`;
-            document.getElementById('sprintStartDate').textContent = `Start Date : ${firstIssue.fields.customfield_10007[0].startDate.slice(0, 10)}`;
-            document.getElementById('sprintEndDate').textContent = `End Date : ${firstIssue.fields.customfield_10007[0].endDate.slice(0, 10)}`;
-
-
-            let toalSP = 0;
-            let storyCount = 0;
-            let bugCount = 0;
-            let storyStatusCounts = { "Completed": 0, "Not Completed": 0 };
-            let bugStatusCounts = { "Completed": 0, "Not Completed": 0 };
-            let techStoryCount = 0;
-            let techDebtCount = 0;
-            let spikeCount = 0;
-            let techStoryStatusCounts = { "Completed": 0, "Not Completed": 0 };
-            let techDebtStatusCounts = { "Completed": 0, "Not Completed": 0 };
-            let spikeStatusCounts = { "Completed": 0, "Not Completed": 0 };
-            let StoryPointCounts = 0;
-
-            const storyTableBody = document.getElementById('storyTable').querySelector('tbody');
-            const bugTableBody = document.getElementById('bugTable').querySelector('tbody');
-            const techStoryTableBody = document.getElementById('techStoryTable').querySelector('tbody');
-            const techDebtTableBody = document.getElementById('techDebtTable').querySelector('tbody');
-            const spikeTableBody = document.getElementById('spikeTable').querySelector('tbody');
+            let totalStoryPoints = 0;
+            let completedStoryPoints = 0;
+            let inProgressStoryPoints = 0;
 
             issues.forEach(issue => {
-                const { issuetype, status, summary, parent, customfield_1005 } = issue.fields;
-                const issueKey = issue.key;
-                const issueType = issuetype.name;
-                const issueStatus = status.name;
-                const epicName = issue.fields.parent.fields.summary;
-                const storyPoint = issue.fields.customfield_10005;
-                const issueCompletionStatus = (issueStatus === "Done" || issueStatus === "Closed") ? "Completed" : "Not Completed";
+                const storyPoints = issue.fields.customfield_10006 || 0;
+                totalStoryPoints += storyPoints;
 
+                const issueStatus = issue.fields.status.name;
 
-
-                const row = `<tr><td>${issueKey}</td><td>${summary}</td><td>${issueStatus}</td><td>${epicName}</td><td>${storyPoint}</td></tr>`;
-
-                switch (issueType) {
-                    case 'Story':
-                        storyCount++;
-                        storyTableBody.insertAdjacentHTML('beforeend', row);
-                        storyStatusCounts[issueCompletionStatus] = (storyStatusCounts[issueCompletionStatus] || 0) + 1;
+                switch (issueStatus) {
+                    case "Done":
+                        completedStoryPoints += storyPoints;
                         break;
-                    case 'Bug':
-                        bugCount++;
-                        bugTableBody.insertAdjacentHTML('beforeend', row);
-                        bugStatusCounts[issueCompletionStatus] = (bugStatusCounts[issueCompletionStatus] || 0) + 1;
-                        break;
-                    case 'Tech Story':
-                        techStoryCount++;
-                        techStoryTableBody.insertAdjacentHTML('beforeend', row);
-                        techStoryStatusCounts[issueCompletionStatus] = (techStoryStatusCounts[issueCompletionStatus] || 0) + 1;
-                        break;
-                    case 'Tech Debt':
-                        techDebtCount++;
-                        techDebtTableBody.insertAdjacentHTML('beforeend', row);
-                        techDebtStatusCounts[issueCompletionStatus] = (techDebtStatusCounts[issueCompletionStatus] || 0) + 1;
-                        break;
-                    case 'Spike':
-                        spikeCount++;
-                        spikeTableBody.insertAdjacentHTML('beforeend', row);
-                        spikeStatusCounts[issueCompletionStatus] = (spikeStatusCounts[issueCompletionStatus] || 0) + 1;
-                        break;
-                    default:
+                    case "In Progress":
+                    case "QA Testing":
+                        inProgressStoryPoints += storyPoints;
                         break;
                 }
             });
 
-          // Function to calculate story points
-    //function calculateStoryPoints(issues) {
-    //  let total = 0;
-    //  let completed = 0;
-    //  let inProgress = 0;
- 
-    //  issues.forEach(issue => {
-    //    if (issue.fields && issue.fields.customfield_10005) {
-    //      total += issue.fields.customfield_10005;
-    //      if (issue.fields.status.name === "Done") {
-    //        completed += issue.fields.customfield_10016;
-    //      } else if (issue.fields.status.name === "In Progress") {
-    //        inProgress += issue.fields.customfield_10005;
-    //      }
-    //    }
-    //  });
- 
-    //  return { total, completed, inProgress };
-    //}
- 
-    //// Get the story points
-    //const { total, completed, inProgress } = calculateStoryPoints(data.issues);
- 
-    // Display the story points in the HTML
-  //  document.getElementById('total-story-points').innerText = `Total Story Points: ${total}`;
-   // document.getElementById('completed-story-points').innerText = `Completed Story Points: ${completed}`;
-  //  document.getElementById('in-progress-story-points').innerText = `In Progress Story Points: ${inProgress}`;
+            document.getElementById('sprintName').textContent = `Sprint: ${sprintName}`;
+            document.getElementById('sprintStartDate').textContent = `Sprint Start Date: ${firstIssue.fields.customfield_10007[0].startDate}`;
+            document.getElementById('sprintEndDate').textContent = `Sprint End Date: ${firstIssue.fields.customfield_10007[0].endDate}`;
+            document.getElementById('fix-version').textContent = `Fix Version: ${firstIssue.fields.fixVersions.length > 0 ? firstIssue.fields.fixVersions[0].name : "N/A"}`;
+            document.getElementById('total-story-points').textContent = `Total Story Points: ${totalStoryPoints}`;
+            document.getElementById('completed-story-points').textContent = `Completed Story Points: ${completedStoryPoints}`;
+            document.getElementById('in-progress-story-points').textContent = `In Progress Story Points: ${inProgressStoryPoints}`;
 
-            document.getElementById('storyChartCenterText').textContent = storyCount;
-            document.getElementById('bugChartCenterText').textContent = bugCount;
-            document.getElementById('techStoryChartCenterText').textContent = techStoryCount;
-            document.getElementById('techDebtChartCenterText').textContent = techDebtCount;
-            document.getElementById('spikeChartCenterText').textContent = spikeCount;
+            const calculateStoryPoints = (issues, statusList) => {
+                return issues
+                    .filter(issue => issue.fields.issuetype.name === statusList)
+                    .reduce((total, issue) => total + (issue.fields.customfield_10006 || 0), 0);
+            };
 
-            function createChart(chartId, statusCounts, label) {
-                new Chart(document.getElementById(chartId), {
+            const issueTypeStoryPoints = {
+                Story: calculateStoryPoints(issues, "Story"),
+                Bug: calculateStoryPoints(issues, "Bug"),
+                "Technical Story": calculateStoryPoints(issues, "Technical Story"),
+                "Technical Debt": calculateStoryPoints(issues, "Technical Debt"),
+                Spike: calculateStoryPoints(issues, "Spike"),
+            };
+
+            const renderChart = (chartId, storyPoints) => {
+                const ctx = document.getElementById(chartId).getContext('2d');
+                return new Chart(ctx, {
                     type: 'doughnut',
                     data: {
-                        labels: Object.keys(statusCounts),
                         datasets: [{
-                            data: Object.values(statusCounts),
-                            backgroundColor: [
-                                'rgb(0, 128, 0)', // Green for Completed
-                                'rgb(255, 165, 0)' // Amber for Not Completed
-                            ],
-                            hoverOffset: 1
-                        }]
+                            data: storyPoints,
+                            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                            hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                        }],
                     },
                     options: {
-                        plugins: {
-                            legend: {
-                                display: false,
-                                position: 'bottom'
-                            },
-                            title: {
-                                display: true,
-                                text: label,
-                                font: {
-                                    size: 18
-                                }
-                            }
-                        }
-                    }
+                        responsive: true,
+                        cutoutPercentage: 80,
+                    },
                 });
-            }
+            };
 
-            createChart('storyChart', storyStatusCounts, 'Story Status');
-            createChart('bugChart', bugStatusCounts, 'Defect Status');
-            createChart('techStoryChart', techStoryStatusCounts, 'Tech Story Status');
-            createChart('techDebtChart', techDebtStatusCounts, 'Tech Debt Status');
-            createChart('spikeChart', spikeStatusCounts, 'Spike Status');
+            const storyPoints = [completedStoryPoints, inProgressStoryPoints, totalStoryPoints - completedStoryPoints - inProgressStoryPoints];
+            const storyChart = renderChart('storyChart', [issueTypeStoryPoints.Story]);
+            const bugChart = renderChart('bugChart', [issueTypeStoryPoints.Bug]);
+            const techStoryChart = renderChart('techStoryChart', [issueTypeStoryPoints["Technical Story"]]);
+            const techDebtChart = renderChart('techDebtChart', [issueTypeStoryPoints["Technical Debt"]]);
+            const spikeChart = renderChart('spikeChart', [issueTypeStoryPoints.Spike]);
+
+            const populateTable = (tableId, issueType) => {
+                const tableBody = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+                tableBody.innerHTML = '';
+                issues
+                    .filter(issue => issue.fields.issuetype.name === issueType)
+                    .forEach(issue => {
+                        const row = tableBody.insertRow();
+                        row.insertCell(0).textContent = issue.key;
+                        row.insertCell(1).textContent = issue.fields.summary;
+                        row.insertCell(2).textContent = issue.fields.status.name;
+                        row.insertCell(3).textContent = issue.fields.customfield_10006 || 0;
+                    });
+            };
+
+            populateTable('storyTable', 'Story');
+            populateTable('bugTable', 'Bug');
+            populateTable('techStoryTable', 'Technical Story');
+            populateTable('techDebtTable', 'Technical Debt');
+            populateTable('spikeTable', 'Spike');
+
+            } catch (error) {
+                console.error('Error fetching issues:', error);
+            }
         });
+
     </script>
 </body>
 </html>
