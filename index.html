@@ -3,717 +3,379 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>End Of Sprint Report</title>
+    <title>Jira Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-3d/dist/chartjs-chart-3d.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+        :root {
+            --primary-color: #0052CC;
+            --secondary-color: #253858;
+            --background-color: #F4F5F7;
+            --text-color: #172B4D;
+            --border-color: #DFE1E6;
+            --chart-bg: #FFFFFF;
+        }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Inter', sans-serif;
             margin: 0;
-            background-color: #f4f4f4;
-            color: #333;
-            display: block;
-            flex-direction: column;
-            align-items: normal;
-            overflow-x: hidden;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
         }
 
-        .card-container2,
-        .stats-container {
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            padding: 20px;
-            width: 100%; /* Adjust as needed */
-            max-width: auto; /* Adjust as needed */
-            text-align: center;
-        }
-
-        .card-container2 h1,
-        .card-container2 h2,
-        .card-container2 h3,
-        .card-container2 .date-container div,
-        .stats-container .stats-title {
-            margin: 10px 0;
-            color: #0073e6;
-        }
-
-        .card-container2 h1 {
-            font-size: 2em;
-        }
-
-        .card-container2 h2 {
-            font-size: 1.5em;
-        }
-
-        .card-container2 h3 {
-            font-size: 1.2em;
-        }
-
-
-        #stats {
-            text-align: left;
-            width: 100%;
-            padding: 0 10px;
-        }
-
-        .stats-container {
-            width: 100%;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            background-color: white;
-            border-radius: 10px;
-            margin-top: 20px;
-        }
-
-        .stats-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-            .stats-table th,
-            .stats-table td {
-                padding: 15px;
-                text-align: left;
-            }
-
-            .stats-table th {
-                background-color: #0073e6;
-                color: white;
-                font-weight: normal;
-            }
-
-            .stats-table tr:nth-child(even) {
-                background-color: #f2f2f2;
-            }
-
-            .stats-table tr:hover {
-                background-color: #e6e6e6;
-            }
-
-        .stats-title {
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            color: #0073e6;
-            text-align: center;
-        }
-
-        .card-container {
-            display: flex;
-            flex-wrap: nowrap;
-            overflow-x: hidden;
-            width: 80%;
-            padding: 20px;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            margin-bottom: 20px;
-            margin-top: 20px;
-        }
-
-        .card {
-            border: none;
-            padding: 2px;
-            margin: 5px;
-            text-align: center;
-            position: center;
-            min-width: 250px;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-            transition: transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
-        }
-
-            .card:hover {
-                transform: translateY(-5px);
-                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            }
-
-        .chart-container {
-            width: 100%;
-            height: 300px;
-            position: relative;
-        }
-
-        .chart-center-text {
-            position: absolute;
-            top: 55%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 6em;
-            font-weight: bold;
-            color: #0073e6;
-        }
-
-        .collapsible {
-            background-color: #0073e6;
+        .header {
+            background-color: var(--primary-color);
             color: white;
-            border: none;
-            text-align: left;
-            outline: none;
-            cursor: pointer;
-            padding: 10px;
-            width: 100%;
-            font-size: 1.2em;
-            transition: background-color 0.3s;
-            margin-top: 10px;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-wrapper {
+            background-color: var(--chart-bg);
             border-radius: 8px;
-
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            padding: 1rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
-            .collapsible:hover {
-                background-color: #005bb5;
-            }
+        .chart-wrapper:hover {
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+            transform: translateY(-5px);
+        }
 
-        .content {
-            padding: 0 20px;
+        .issue-type {
+            background-color: var(--chart-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            margin-bottom: 1rem;
             overflow: hidden;
-            transition: max-height 0.3s ease-out, padding 0.3s;
-            max-height: 0;
+            transition: all 0.3s ease;
         }
 
-            .content.expanded {
-                max-height: 2000px;
-                padding: 20px;
-            }
+        .issue-type h3 {
+            background-color: var(--secondary-color);
+            color: white;
+            margin: 0;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
 
+        .issue-type h3:hover {
+            background-color: var(--primary-color);
+        }
 
-        .issue-table {
+        table {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        
-            }
-            .issue-table th, .issue-table td {
-                border: 1px solid #ddd;
-                padding: 10px;
-                text-align: left;
-            }
-
-            .issue-table th {
-                background-color: #f2f2f2;
-            }
-
-        @media (max-width: 900px) {
-            .card {
-                flex: 1 1 calc(50% - 40px);
-            }
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.4s ease;
         }
 
-        @media (max-width: 600px) {
-            .card {
-                flex: 1 1 100%;
+        table.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--background-color);
+            font-weight: 600;
+        }
+
+        tr {
+            transition: background-color 0.2s ease;
+        }
+
+        tr:hover {
+            background-color: #F8F9FA;
+        }
+
+        td div {
+            max-height: 2.4em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        th:nth-child(1), td:nth-child(1) { width: 15%; } /* Issue Number */
+        th:nth-child(2), td:nth-child(2) { width: 15%; } /* Status */
+        th:nth-child(3), td:nth-child(3) { width: 70%; } /* Issues */
+
+        td a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        td a:hover {
+            color: #003d99;
+            text-decoration: underline;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chart-wrapper, .issue-type {
+            animation: fadeInUp 0.6s ease-out forwards;
         }
     </style>
-
 </head>
 <body>
-    <div class="card-container2">
-        <h1 id="projectName">Project Name</h1>
-        <h2 id="sprintName">Sprint Name</h2>
-        <h3 id="sprintGoal">Sprint Goal</h3>
-        <div id="sprintStartDate">Sprint Start Date</div>
-        <div id="sprintEndDate">Sprint End Date</div>
+    <header class="header">
+        <h1>Jira Dashboard</h1>
+    </header>
+
+    <div class="container">
+        <div class="charts-container" id="chartsContainer"></div>
+        <div id="issueTypeList"></div>
     </div>
-
-    <div class="stats-container">
-        <div class="stats-title">Sprint Statistics</div>
-        <table class="stats-table">
-            <thead>
-                <tr>
-                    <th>Metric</th>
-                    <th>Issue Count</th>
-                    <th>Story Points</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Completed</td>
-                    <td id="completed-count"></td>
-                    <td id="completed-story-points"></td>
-                </tr>
-                <tr>
-                    <td>Not Completed</td>
-                    <td id="not-completed-count"></td>
-                    <td id="not-completed-story-points"></td>
-                </tr>
-                <tr>
-                    <td>Total</td>
-                    <td id="total-sps"></td>
-                    <td id="total-count"></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-
-    <!--<div class="option1" id="stats">
-        <p>Total Test Cases : <span id="totalTestCases">0</span></p>
-    </div>-->
-
-    <div class="card-container">
-        <div class="card" onclick="toggleTable('storyContent')">
-            <div class="chart-container">
-                <canvas id="storyChart"></canvas>
-                <div id="storyChartCenterText" class="chart-center-text"></div>
-            </div>
-        </div>
-        <div class="card" onclick="toggleTable('bugContent')">
-            <div class="chart-container">
-                <canvas id="bugChart"></canvas>
-                <div id="bugChartCenterText" class="chart-center-text"></div>
-            </div>
-        </div>
-        <div class="card" onclick="toggleTable('techStoryContent')">
-            <div class="chart-container">
-                <canvas id="techStoryChart"></canvas>
-                <div id="techStoryChartCenterText" class="chart-center-text"></div>
-            </div>
-        </div>
-        <div class="card" onclick="toggleTable('techDebtContent')">
-            <div class="chart-container">
-                <canvas id="techDebtChart"></canvas>
-                <div id="techDebtChartCenterText" class="chart-center-text"></div>
-            </div>
-        </div>
-        <!--<div class="card" onclick="toggleTable('spikeContent')">
-            <div class="chart-container">
-                <canvas id="spikeChart"></canvas>
-                <div id="spikeChartCenterText" class="chart-center-text"></div>
-            </div>
-        </div> -->
-    </div>
-    <button class="collapsible" onclick="toggleTable('storyContent', 'Stories')">Stories</button>
-    <div class="content" id="storyContent">
-        <table class="issue-table" id="storyTable">
-            <thead>
-                <tr>
-                    <th>Priority</th>
-                    <th>Key</th>
-                    <th>Summary</th>
-                    <th>Status</th>
-                    <th>Test Case</th>
-                    <th>Test Case Count</th>
-                    <th>Release Name</th>
-                    <th id="StorySP">Story Points</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <button class="collapsible" onclick="toggleTable('bugContent', 'Defects')">Defects</button>
-    <div class="content" id="bugContent">
-        <table class="issue-table" id="bugTable">
-            <thead>
-                <tr>
-                    <th>Priority</th>
-                    <th>Key</th>
-                    <th>Summary</th>
-                    <th>Status</th>
-                    <th>Test Case</th>
-                    <th>Test Case Count</th>
-                    <th>Release Name</th>
-                    <th id="BugSP">Story Points</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <button class="collapsible" onclick="toggleTable('techStoryContent', 'Tech Stories')">Tech Stories</button>
-    <div class="content" id="techStoryContent">
-        <table class="issue-table" id="techStoryTable">
-            <thead>
-                <tr>
-                    <th>Priority</th>
-                    <th>Key</th>
-                    <th>Summary</th>
-                    <th>Status</th>
-                    <th>Test Case</th>
-                    <th>Test Case Count</th>
-                    <th>Release Name</th>
-                    <th id="TechStorySP">Story Points</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <button class="collapsible" onclick="toggleTable('techDebtContent', 'TechDebt')">TechDebt</button>
-    <div class="content" id="techDebtContent">
-        <table class="issue-table" id="techDebtTable">
-            <thead>
-                <tr>
-                    <th>Priority</th>
-                    <th>Key</th>
-                    <th>Summary</th>
-                    <th>Status</th>
-                    <th>Test Case</th>
-                    <th>Test Case Count</th>
-                    <th>Release Name</th>
-                    <th id="SpikeSP">Story Points</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
-
-    <!--<button class="collapsible" onclick="toggleTable('spikeContent', 'Spikes')">Spikes</button>
-    <div class="content" id="spikeContent">
-        <table class="issue-table" id="spikeTable">
-            <thead>
-                <tr>
-                 <th>Priority</th>
-                    <th>Key</th>
-                    <th>Summary</th>
-                    <th>Status</th>
-                    <th>Test Case</th>
-                    <th>Test Case Count</th>
-                    <th>Release Name</th>
-                    <th>Release Date</th>
-                    <th>Story Points</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>-->
 
     <script>
-        function toggleTable(contentId, tableName) {
-            var content = document.getElementById(contentId);
-            if (content.classList.contains('expanded')) {
-                content.classList.remove('expanded');
-            } else {
-                var allContents = document.querySelectorAll('.content');
-                allContents.forEach(function (item) {
-                    if (item.id !== contentId && item.classList.contains('expanded')) {
-                        item.classList.remove('expanded');
-                    }
-                });
-                content.classList.add('expanded');
-                var tableNameElement = document.getElementById(contentId + 'Name');
-                tableNameElement.textContent = tableName;
+        // Define a fixed color mapping for statuses
+        const statusColors = {
+            'To Do': '#0078D4',
+            'In Progress': '#5C2D91',
+            'Done': '#107C10',
+            'Blocked': '#A80000',
+            'Review': '#008272'
+            // Add more statuses and colors as needed
+        };
+
+        // Data fetching and processing
+        async function fetchJiraData() {
+            try {
+                const response = await fetch('jira-filter.json');
+                const data = await response.json();
+                return data.issues;
+            } catch (error) {
+                console.error('Error fetching data from jira-filter.json:', error);
+                return [];
             }
         }
 
-        function toggleNestedContent(id) {
-            var nestedContent = document.getElementById(id);
-            if (nestedContent.style.display === "none") {
-                nestedContent.style.display = "block";
-            } else {
-                nestedContent.style.display = "none";
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', async function () {
-            const response = await fetch('http://localhost:3000/jira');
-            //const response = await fetch('issues.json'); //local file path
-            const data = await response.json();
-
-            // Function to calculate total test cases
-            function calculateTotalTestCases(issues) {
-                let totalTestCases = 0;
-                issues.forEach(issue => {
-                    if (issue.fields && issue.fields.testCaseCount) {
-                        totalTestCases += parseInt(issue.fields.testCaseCount, 10);
-                    }
-                });
-                return totalTestCases;
-            }
-
-            const totalTestCases = calculateTotalTestCases(data.issues);
-
-            // Update table headers with total test cases
-           // document.getElementById('totalTestCases').textContent = totalTestCases;
-
-            // Function to calculate total test cases for each issue type
-            function calculateTotalTestCasesByType(issues) {
-                const testCaseCounts = {
-                    'Story': 0,
-                    'Bug': 0,
-                    'Tech Story': 0,
-                    'TechDebt': 0,
-                    //'Spike': 0,
-                    //'Epic': 0,
-                    //'Task': 0,
-                    //'Feature': 0
-                };
-
-                issues.forEach(issue => {
-                    const issueType = issue.fields.issuetype.name;
-                    if (issue.fields.testCaseCount) {
-                        testCaseCounts[issueType] += parseInt(issue.fields.testCaseCount, 10);
-                    }
-                });
-
-                return testCaseCounts;
-            }
-
-            const totalTestCasesByType = calculateTotalTestCasesByType(data.issues);
-
-            // Function to update table headers with total test cases for each issue type
-            function updateTableHeadersWithTotalTestCases() {
-                const headers = {
-                    'Story': document.getElementById('storyTable').querySelector('thead'),
-                    'Bug': document.getElementById('bugTable').querySelector('thead'),
-                    'Tech Story': document.getElementById('techStoryTable').querySelector('thead'),
-                    'TechDebt': document.getElementById('techDebtTable').querySelector('thead'),
-                    //'Spike': document.getElementById('spikeTable').querySelector('thead'),
-                    //'Epic': document.getElementById('epicTable').querySelector('thead'),
-                    //'Task': document.getElementById('taskTable').querySelector('thead'),
-                    //'Feature': document.getElementById('featureTable').querySelector('thead')
-                };
-
-                Object.keys(headers).forEach(issueType => {
-                    if (headers[issueType]) {
-                        const th = headers[issueType].querySelector('th:nth-child(6)');
-                        if (th) {
-                            th.textContent = `Test Cases Count (${totalTestCasesByType[issueType]})`;
-                        }
-                    }
-                });
-            }
-
-            updateTableHeadersWithTotalTestCases();
-
-            // Function to populate tables for each issue type
-            function populateTables(issues) {
-                const tableBodies = {
-                    'Story': document.getElementById('storyTable').querySelector('tbody'),
-                    'Bug': document.getElementById('bugTable').querySelector('tbody'),
-                    'Tech Story': document.getElementById('techStoryTable').querySelector('tbody'),
-                    'TechDebt': document.getElementById('techDebtTable').querySelector('tbody')
-                    //'Spike': document.getElementById('spikeTable').querySelector('tbody'),
-                    //'Epic': document.getElementById('epicTable').querySelector('tbody'),
-                    //'Task': document.getElementById('taskTable').querySelector('tbody'),
-                    //'Feature': document.getElementById('featureTable').querySelector('tbody')
-                };
-
-                issues.forEach(issue => {
-                    const { issuetype, status, summary, parent, customfield_1005, testCaseCount, priority } = issue.fields;
-                    const issueType = issuetype.name;
-                    const issueKey = issue.key;
-                    const issueStatus = status.name;
-                    const priority1 = priority.name;
-
-                    const row = `<tr>
-                                                <td>${priority1}</td>
-                                                <td><a href="https://eaflood.atlassian.net//browse/${issue.key}" target="_blank">${issue.key}</a></td>
-                                                <td>${summary}</td>
-                                                <td>${issueStatus}</td>
-                                                <td>${issue.fields.testCase.replace(/\n/g, '<br>').replace('Acceptance Criteria: ', '')}</td>
-                                                <td>${testCaseCount}</td>
-                                                <td>${issue.fields.releaseName}</td>
-
-                                                <td>${issue.fields.customfield_10005}</td>
-                                            </tr>`;
-
-                    if (tableBodies[issueType]) {
-                        tableBodies[issueType].insertAdjacentHTML('beforeend', row);
-                    }
-                });
-            }
-
-
-            const firstIssue = data.issues ? data.issues[0] : null;
-            const projectName = firstIssue && firstIssue.fields.project ? firstIssue.fields.project.name : "Not Available";
-            let sprintName = "Not Available";
-            if (firstIssue && firstIssue.fields && firstIssue.fields.customfield_10007 && firstIssue.fields.customfield_10007.length > 0) {
-                sprintName = firstIssue.fields.customfield_10007[0].name;
-            }
-
-            document.getElementById('projectName').textContent = `${projectName} (NIRMS)`;
-
-            const issues = data.issues;
-            const stats = data.stats;
-            const totalIssues = issues.length;
-
-            function calculateStoryPoints(issues) {
-                let total = 0;
-                let completed = 0;
-                let inProgress = 0;
-
-                issues.forEach(issue => {
-                    if (issue.fields && issue.fields.customfield_10005) {
-                        total += issue.fields.customfield_10005;
-                        if (issue.fields.status.name === "Done") {
-                            completed += issue.fields.customfield_10016;
-                        } else if (issue.fields.status.name === "In Progress") {
-                            inProgress += issue.fields.customfield_10005;
-                        }
-                    }
-                });
-
-                return { total, completed, inProgress };
-            }
-
-            // Get the story points
-            const { total, completed, inProgress } = calculateStoryPoints(data.issues);
-
-            document.getElementById('sprintName').textContent = `Current Sprint : ${sprintName}`;
-            document.getElementById('sprintStartDate').textContent = `Start Date : ${firstIssue.fields.customfield_10007[0].startDate.slice(0, 10)}`;
-            document.getElementById('sprintEndDate').textContent = `End Date : ${firstIssue.fields.customfield_10007[0].endDate.slice(0, 10)}`;
-            document.getElementById('sprintGoal').textContent = `Goals : ${firstIssue.fields.customfield_10007[0].goal}`;
-            document.getElementById('total-count').textContent = total;
-            document.getElementById('total-sps').textContent = totalIssues;
-            document.getElementById('completed-count').textContent = stats.completed.count;
-            document.getElementById('completed-story-points').textContent = stats.completed.storyPoints;
-            document.getElementById('not-completed-count').textContent = stats.notCompleted.count;
-            document.getElementById('not-completed-story-points').textContent = stats.notCompleted.storyPoints;
-
-            document.getElementById('StorySP').textContent = "Story Points (" + stats.storyPointsByType.Story + ")";
-            document.getElementById('BugSP').textContent = "Story Points (" + stats.storyPointsByType.Bug + ")";
-            document.getElementById('TechStorySP').textContent = "Story Points (" + stats.storyPointsByType["Tech Story"] + ")";
-            document.getElementById('SpikeSP').textContent = "Story Points (" + stats.storyPointsByType.TechDebt + ")";
-
-            let toalSP = 0;
-            let storyCount = 0;
-            let bugCount = 0;
-            let storyStatusCounts = { "Completed": 0, "Not Completed": 0 };
-            let bugStatusCounts = { "Completed": 0, "Not Completed": 0 };
-            let techStoryCount = 0;
-            let techDebtCount = 0;
-            let spikeCount = 0;
-            let techStoryStatusCounts = { "Completed": 0, "Not Completed": 0 };
-            let techDebtStatusCounts = { "Completed": 0, "Not Completed": 0 };
-            let spikeStatusCounts = { "Completed": 0, "Not Completed": 0 };
-            let StoryPointCounts = 0;
-
-            // Function to hide card if count is zero
-            function hideCardIfZero(cardId, count) {
-                const cardElement = document.getElementById(cardId);
-                if (cardElement && count === 0) {
-                    cardElement.style.display = 'none';
-                }
-            }
-
-            // Hide cards based on counts
-            hideCardIfZero('storyCard', storyCount);
-            hideCardIfZero('bugCard', bugCount);
-            hideCardIfZero('techStoryCard', techStoryCount);
-            hideCardIfZero('techDebtCard', techDebtCount);
-
-            const storyTableBody = document.getElementById('storyTable').querySelector('tbody');
-            const bugTableBody = document.getElementById('bugTable').querySelector('tbody');
-            const techStoryTableBody = document.getElementById('techStoryTable').querySelector('tbody');
-            const techDebtTableBody = document.getElementById('techDebtTable').querySelector('tbody');
-            // const spikeTableBody = document.getElementById('spikeTable').querySelector('tbody');
-
+        function processJiraData(issues) {
+            const issueTypeData = {};
             issues.forEach(issue => {
-                const { issuetype, status, summary, parent, customfield_1005, priority
-                } = issue.fields;
-                const issueKey = issue.key;
+                const { status, issuetype } = issue.fields;
                 const issueType = issuetype.name;
-                const issueStatus = status.name;
-                const priorty1 = priority.name
+                const statusName = status.name;
 
-                const storyPoint = issue.fields.customfield_10005;
-                const issueCompletionStatus = (issueStatus === "Done" || issueStatus === "Closed" || issueStatus === "Ready for PO") ? "Completed" : "Not Completed";
-
-
-
-                const row = `<tr>
-                                                 <td>${priorty1}</td>
-                                                 <td><a href="https://eaflood.atlassian.net//browse/${issue.key}" target="_blank">${issue.key}</a></td>
-                                                 <td>${summary}</td><td>${issueStatus}</td>
-                                                 <td>${issue.fields.testCase.replace(/\n/g, '<br>')}</td>
-                                                 <td>${issue.fields.testCaseCount}</td>
-                                                 <td>${issue.fields.releaseName}</td>
-                                                 <td>${storyPoint}</td>
-
-                                             </tr>`;
-
-
-                switch (issueType) {
-                    case 'Story':
-                        storyCount++;
-                        storyTableBody.insertAdjacentHTML('beforeend', row);
-                        storyStatusCounts[issueCompletionStatus] = (storyStatusCounts[issueCompletionStatus] || 0) + 1;
-                        break;
-                    case 'Bug':
-                        bugCount++;
-                        bugTableBody.insertAdjacentHTML('beforeend', row);
-                        bugStatusCounts[issueCompletionStatus] = (bugStatusCounts[issueCompletionStatus] || 0) + 1;
-                        break;
-                    case 'Tech Story':
-                        techStoryCount++;
-                        techStoryTableBody.insertAdjacentHTML('beforeend', row);
-                        techStoryStatusCounts[issueCompletionStatus] = (techStoryStatusCounts[issueCompletionStatus] || 0) + 1;
-                        break;
-                    case 'TechDebt':
-                        techDebtCount++;
-                        techDebtTableBody.insertAdjacentHTML('beforeend', row);
-                        techDebtStatusCounts[issueCompletionStatus] = (techDebtStatusCounts[issueCompletionStatus] || 0) + 1;
-                        break;
-                    case 'Spike':
-                        spikeCount++;
-                        spikeTableBody.insertAdjacentHTML('beforeend', row);
-                        spikeStatusCounts[issueCompletionStatus] = (spikeStatusCounts[issueCompletionStatus] || 0) + 1;
-                        break;
-                    default:
-                        break;
+                if (!issueTypeData[issueType]) {
+                    issueTypeData[issueType] = { statusCounts: {}, issues: {} };
                 }
+
+                issueTypeData[issueType].statusCounts[statusName] = (issueTypeData[issueType].statusCounts[statusName] || 0) + 1;
+                
+                if (!issueTypeData[issueType].issues[statusName]) {
+                    issueTypeData[issueType].issues[statusName] = [];
+                }
+                issueTypeData[issueType].issues[statusName].push(issue);
             });
+            return issueTypeData;
+        }
 
+        // Chart creation
+        function createDoughnutChart(issueType, statusCounts, chartContainer) {
+            const canvas = document.createElement('canvas');
+            chartContainer.appendChild(canvas);
 
-            document.getElementById('storyChartCenterText').textContent = storyCount;
-            document.getElementById('bugChartCenterText').textContent = bugCount;
-            document.getElementById('techStoryChartCenterText').textContent = techStoryCount;
-            document.getElementById('techDebtChartCenterText').textContent = techDebtCount;
-            //  document.getElementById('spikeChartCenterText').textContent = spikeCount;
+            const ctx = canvas.getContext('2d');
+            const total = Object.values(statusCounts).reduce((a, b) => a + b, 0);
+            
+            const labels = Object.keys(statusCounts);
+            const data = Object.values(statusCounts);
+            const backgroundColor = labels.map(status => statusColors[status] || '#999999'); // Default color if status not found
 
-            function createChart(chartId, statusCounts, label) {
-                new Chart(document.getElementById(chartId), {
-                    type: 'doughnut',
-                    data: {
-                        labels: Object.keys(statusCounts),
-                        datasets: [{
-                            data: Object.values(statusCounts),
-                            backgroundColor: [
-                                'rgb(0, 128, 0)', // Green for Completed
-                                'rgb(255, 165, 0)' // Amber for Not Completed
-                            ],
-                            hoverOffset: 1
-                        }]
-                    },
-                    options: {
-                        plugins: {
-                            legend: {
-                                display: false,
-                                position: 'bottom'
-                            },
-                            title: {
-                                display: true,
-                                text: label,
-                                font: {
-                                    size: 16
-                                }
+            const chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: backgroundColor
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+                        title: { display: true, text: issueType, font: { size: 14 } },
+                        datalabels: {
+                            color: '#fff',
+                            font: { weight: 'bold', size: 10 },
+                            formatter: (value, ctx) => {
+                                const sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                const percentage = (value * 100 / sum).toFixed(1) + "%";
+                                return `${value}\n(${percentage})`;
                             }
                         }
+                    },
+                    cutout: '50%',
+                    layout: { padding: 10 }
+                },
+                plugins: [ChartDataLabels, {
+                    id: 'centerText',
+                    afterDraw: (chart) => {
+                        const { ctx, chartArea } = chart;
+                        ctx.save();
+                        const centerX = (chartArea.left + chartArea.right) / 2;
+                        const centerY = (chartArea.top + chartArea.bottom) / 2;
+                        const innerRadius = chart.getDatasetMeta(0).data[0].innerRadius;
+                        
+                        const fontSize = Math.min(innerRadius * 1.5, 60);
+                        ctx.font = `bold ${fontSize}px Arial`;
+                        ctx.textBaseline = 'middle';
+                        ctx.textAlign = 'center';
+                        ctx.fillStyle = '#000';
+                        
+                        ctx.fillText(total.toString(), centerX, centerY);
+                        
+                        ctx.font = `bold ${fontSize / 3}px Arial`;
+                        ctx.fillText("Total", centerX, centerY + fontSize / 2);
+                        
+                        ctx.restore();
                     }
+                }]
+            });
+
+            chartContainer.addEventListener('click', () => toggleIssueTable(issueType));
+
+            return chart;
+        }
+
+        // Issue table creation and management
+        function createIssueTable(issues, title) {
+            const section = document.createElement('div');
+            section.className = 'issue-type';
+            section.id = `table-${title.toLowerCase().replace(/\s+/g, '-')}`;
+            
+            const header = document.createElement('h3');
+            header.textContent = `${title}`;
+            section.appendChild(header);
+
+            const table = document.createElement('table');
+            table.style.display = 'none';
+            table.innerHTML = `
+                <tr>
+                    <th>Issue Number</th>
+                    <th>Status</th>
+                    <th>Issues</th>
+                </tr>
+            `;
+
+            for (const [status, statusIssues] of Object.entries(issues)) {
+                statusIssues.forEach((issue) => {
+                    const row = table.insertRow();
+                    row.innerHTML = `
+                        <td><a href="https://kirtisharma0691.atlassian.net/browse/${issue.key}" target="_blank">${issue.key}</a></td>
+                        <td title="${status}">${status}</td>
+                        <td><div title="${issue.fields.summary} (${issue.fields.assignee ? issue.fields.assignee.displayName : 'Unassigned'})">${issue.fields.summary} (${issue.fields.assignee ? issue.fields.assignee.displayName : 'Unassigned'})</div></td>
+                    `;
                 });
             }
 
-            createChart('storyChart', storyStatusCounts, 'Story Status');
-            createChart('bugChart', bugStatusCounts, 'Defect Status');
-            createChart('techStoryChart', techStoryStatusCounts, 'Tech Story Status');
-            createChart('techDebtChart', techDebtStatusCounts, 'TechDebt Status');
-            // createChart('spikeChart', spikeStatusCounts, 'Spike Status');
+            section.appendChild(table);
+            header.addEventListener('click', () => toggleIssueTable(title));
 
+            return section;
+        }
 
-            // Set statistics in the table
-            document.getElementById('completed-count').textContent = completedCount;
-            document.getElementById('completed-story-points').textContent = completedStoryPoints;
-            document.getElementById('not-completed-count').textContent = notCompletedCount;
-            document.getElementById('not-completed-story-points').textContent = notCompletedStoryPoints;
-            document.getElementById('total-story-points').textContent = total;
-            document.getElementById('total-count').textContent = totalIssues;
-        });
+        function toggleIssueTable(issueType) {
+            const tableId = `table-${issueType.toLowerCase().replace(/\s+/g, '-')}`;
+            const tableContainer = document.getElementById(tableId);
+            if (tableContainer) {
+                const table = tableContainer.querySelector('table');
+                if (table) {
+                    table.classList.toggle('show');
+                    table.style.display = table.classList.contains('show') ? 'table' : 'none';
+                }
+            }
+        }
 
+        function displayIssueTypeList(issueTypeData) {
+            const issueTypeList = document.getElementById('issueTypeList');
+            issueTypeList.innerHTML = '';
+
+            for (const [issueType, data] of Object.entries(issueTypeData)) {
+                const section = createIssueTable(data.issues, issueType);
+                issueTypeList.appendChild(section);
+            }
+
+            animateTableRows();
+        }
+
+        function animateTableRows() {
+            const tables = document.querySelectorAll('table');
+            tables.forEach(table => {
+                table.querySelectorAll('tr').forEach((row, index) => {
+                    row.style.animation = `fadeInUp 0.3s ease-out forwards ${index * 0.05}s`;
+                    row.style.opacity = '0';
+                });
+            });
+        }
+
+        // Dashboard initialization
+        async function initDashboard() {
+            const issues = await fetchJiraData();
+            const issueTypeData = processJiraData(issues);
+            
+            const chartsContainer = document.getElementById('chartsContainer');
+            chartsContainer.style.height = '350px';
+            
+            for (const [issueType, data] of Object.entries(issueTypeData)) {
+                const chartWrapper = document.createElement('div');
+                chartWrapper.className = 'chart-wrapper';
+                chartsContainer.appendChild(chartWrapper);
+                createDoughnutChart(issueType, data.statusCounts, chartWrapper);
+            }
+            
+            displayIssueTypeList(issueTypeData);
+        }
+
+        initDashboard();
     </script>
 </body>
 </html>
