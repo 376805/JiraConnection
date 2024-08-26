@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>End Of Sprint Report</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/5.2.1/tablesort.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            display: block;
+            flex-direction: column;
+            align-items: normal;
+            overflow-x: hidden;
+        }
+
+        .card-container2 {
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            padding-bottom: 5px;
+            width: auto; /* Adjust as needed */
+            max-width: auto; /* Adjust as needed */
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 5px;
+            margin-top: 20px;
+            margin-left: 20px;
+            margin-right: 20px;
+            justify-content: left;
+            align-items: normal;
+        }
+
+        .stats-container {
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            width: auto; /* Adjust as needed */
+            max-width: auto; /* Adjust as needed */
+            text-align: justify-all;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            margin-left: 20px;
+            margin-right: 20px;
+            justify-content: left;
+            align-items: normal;
+        }
+
+        .chard-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: auto;
+        }
+
+        .card-container2 h1,
+        .card-container2 h2,
+        .card-container2 h3,
+        .card-container2 div,
+        .card-container2 .date-container div,
+        .stats-container .stats-title {
+            margin: 10px 0;
+            color: #0073e6;
+        }
+
+        .card-container2 h1 {
+            font-size: 3em;
+        }
+
+        .card-container2 h2 {
+            font-size: 1.5em;
+        }
+
+        .card-container2 h3 {
+            font-size: 1.2em;
+        }
+
+        .card-container2 div {
+            font-size: 1em;
+            display: inline-block;
+        }
+
+        .bold-text {
+            font-weight: bold;
+        }
+
+
+        #stats {
+            text-align: left;
+            width: 100%;
+            padding: 0 10px;
+        }
+
+        .stats-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+            .stats-table th,
+            .stats-table td {
+                padding: 15px;
+                text-align: left;
+            }
+
+            .stats-table th {
+                background-color: #0073e6;
+                color: white;
+                font-weight: normal;
+            }
+
+            .stats-table tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+
+            .stats-table tr:hover {
+                background-color: #e6e6e6;
+            }
+
+        .stats-title {
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            color: #0073e6;
+            text-align: center;
+        }
+
+        .card-container {
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ccc;
+            max-width: 100%;
+            height: auto; /* Adjust height as needed */
+            width: auto; /* Adjust as needed */
+            max-width: auto; /* Adjust as needed */
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            margin-left: 20px;
+            margin-right: 20px;
+            justify-content: left;
+            align-items: normal;
+        }
+
+
+        .card {
+            background-color: white;
+            border: 0px solid #ccc;
+            border-radius: 1px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 5px;
+            margin-right: 5px;
+            margin-left: 5px;
+            flex: 0 0 auto;
+            box-sizing: border-box;
+            min-width: 100px; /* Adjust width as needed */
+            text-align: center;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            }
+
+        .chart-container {
+            width: auto;
+            height: 300px;
+            position: relative;
+        }
+
+        .chart-center-text {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 6em;
+            font-weight: bold;
+            color: #0073e6;
+        }
+
+        .collapsible {
+            background-color: #0073e6;
+            color: white;
+            border: none;
+            text-align: left;
+            outline: none;
+            cursor: pointer;
+            padding: 5px;
+            width: 100%;
+            font-size: 1.2em;
+            transition: background-color 0.3s;
+            margin-top: 5px;
+            border-radius: 8px;
+        }
+
+            .collapsible:hover {
+                background-color: #005bb5;
+            }
+
+        .content {
+            padding: 0 10px;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.5s;
+            max-height: 0;
+        }
+
+            .content.expanded {
+                max-height: 2000px;
+                padding: 0px;
+            }
+
+
+        .issue-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+            overflow-y: auto;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
+
+ 
+            .issue-table tbody {
+                height: auto;
+                overflow-y: auto;
+                color: black;
+            }
+
+            .issue-table th, .issue-table td {
+                border: 1px solid #ddd;
+                padding: 5px;
+                text-align: left;
+            }
+
+            .issue-table th {
+                background-color: #f2f2f2;
+            }
+
+        @media (max-width: 900px) {
+            .card {
+                flex: 1 1 calc(50% - 40px);
+            }
+        }
+
+
+        .sortable {
+            cursor: pointer;
+        }
+
+        .nested-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            display: none;
+            margin-bottom: 10px;
+            margin-left: 10px;
+            margin-right: 10px;
+        }
+
+            .nested-table th, .nested-table td {
+                border: 1px solid #ddd;
+                padding: 5px;
+                text-align: left;
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+
+            .nested-table th {
+                background-color: #f2f2f2;
+            }
+
+        .expand-button {
+            cursor: pointer;
+            color: #0073e6;
+            background: none;
+            border: none;
+            font-size: 1em;
+            padding: 0;
+            transition: color 0.2s ease-in-out;
+        }
+
+        .pushable {
+            background: hsl(340deg 100% 32%);
+            border-radius: 12px;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            outline-offset: 4px;
+        }
+
+        .front {
+            display: block;
+            padding: 12px 42px;
+            border-radius: 12px;
+            font-size: 1.25rem;
+            background: hsl(345deg 100% 47%);
+            color: white;
+            transform: translateY(-6px);
+        }
+
+        .pushable:active .front {
+            transform: translateY(-2px);
+        }
+
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+            th.sortable {
+                cursor: pointer;
+            }
+
+                th.sortable:hover {
+                    background-color: #f1f1f1;
+                }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        ::-webkit-scrollbar {
+            height: 20px; /* height of horizontal scrollbar ← You're missing this */
+            width: 10px; /* width of vertical scrollbar */
+            border: 0px solid #d5d5d5;
+        }
+
+        button {
+            position: relative;
+            margin: auto;
+            width: 250px;
+            cursor: pointer;
+            outline: none;
+            border: 0;
+            text-transform: inherit;
+            font-size: inherit;
+            font-family: inherit;
+        }
+
+            button.styling {
+                font-weight: 100;
+                color: white;
+                padding: 1em 1em;
+                background: #0073e6;
+                transform-style: preserve-3d;
+                transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1);
+            }
+
+                button.styling::before {
+                    position: absolute;
+                    content: '';
+                    width: 100%;
+                    height: 50%;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: #0073e6;
+                    transform: translate3d(0, 0.75em, -1em);
+                    transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), box-shadow 150ms cubic-bezier(0, 0, 0.58, 1);
+                }
+
+                button.styling:hover {
+                    transform: translate(0, 0.25em);
+                }
+
+                    button.styling:hover::before {
+                        transform: translate3d(0, 0.5em, -1em);
+                    }
+
+                button.styling:active {
+                    transform: translate(0em, 0.75em);
+                }
+
+                    button.styling:active::before {
+                        box-shadow: 0 0 0 2px #0692c0, 0 0 #d8f5fe;
+                        transform: translate3d(0, 0, -1em);
+                    }
+    </style>
+
+</head>
+<body>
+    <div class="card-container2">
+        <h1 id="projectName">Project Name</h1>
+        <h2 id="sprintName">Sprint Name</h2>
+        <h3 id="sprintGoal">Sprint Goal</h3>
+        <div id="sprintStartDate">Sprint Start Date</div>
+        <div id="sprintEndDate">Sprint End Date</div>
+    </div>
+
+    <div class="stats-container">
+    <button class="collapsible styling" onclick="toggleTable('releaseContent', 'Release Information')">Release Information</button>
+    <div class="content" id="releaseContent">
+        <h2 class="styling">Current System Release Versions</h2>
+        <div class="card-container" id="currentRelContent">
+            <div class="stats-container">
+                <p><strong>PRD:</strong> <span id="prdVersion"></span></p>
+            </div>
+            <div class="stats-container">
+                <p><strong>PRE:</strong> <span id="preVersion"></span></p>
+            </div>
+            <div class="stats-container">
+                <p><strong>TST:</strong> <span id="tstVersion"></span></p></div>
+            </div>
+            <div class="drafts">
+                <h2 class="styling">Drafts System Release Versions</h2>
+                <div class="card-container" id="draftRelContent">
+                    <ul id="draftList"></ul>
+                </div>
+            </div>
+        </div>
+</div>
+
+    <div class="card-container2">
+        <button class="collapsible styling" onclick="toggleTable('statsContent', 'Sprint Statistics')">Sprint Statistics</button>
+        <div class="content" id="statsContent">
+            <div class="date-container">
+                <h3>JIRA Issue Metrics</h3>
+                <table class="stats-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Not Completed</th>
+                            <th>Completed</th>
+                            <th class="bold-text">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="data-table">
+                        <tr>
+                            <th>Issue</th>
+                            <td id="not-completed-count">0</td>
+                            <td id="completed-count">0</td>
+                            <td id="total-sps" class="bold-text">0</td>
+                        </tr>
+                        <tr>
+                            <th>Story Points</th>
+                            <td id="not-completed-story-points">0</td>
+                            <td id="completed-story-points">0</td>
+                            <td id="total-count" class="bold-text">0</td>
+                        </tr>
+                      
+                    </tbody>
+                </table>
+
+                <canvas id="barChart" width="400" height="200"></canvas>
+        
+
+                <div class="date-container">
+                    <h3>Test Case Metrics</h3>
+                    <table class="stats-table">
+                        <thead>
+                            <tr>
+                                <th>Test Case</th>
+                                <th>Not Completed</th>
+                                <th>Completed</th>
+
+                                <th class="bold-text">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data-table">
+                            <tr>
+                                <th>Manual</th>
+                                <td id="ManualNotCompletedTestCases"></td>
+                                <td id="ManualCompletedTestCases"></td>
+                                <td id="totalTestCases" class="bold-text"></td>
+                            </tr>
+                            <tr>
+                                <th>Automation</th>
+                                <td id="AutomationNotCompletedTestCases"></td>
+                                <td id="AutomationCompletedTestCases"></td>
+                                <td id="AutototalTestCases" class="bold-text"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-container">
+        <div class="card" onclick="toggleTable('sprintAutomationContent')">
+            <div class="chart-container">
+                <canvas id="sprintAutomationChart"></canvas>
+                <div id="sprintAutomationChartCenterText" class="chart-center-text"></div>
+            </div>
+        </div>
+        <div class="card" onclick="toggleTable('storyContent')">
+            <div class="chart-container">
+                <canvas id="storyChart"></canvas>
+                <div id="storyChartCenterText" class="chart-center-text"></div>
+            </div>
+        </div>
+        <div class="card" onclick="toggleTable('bugContent')">
+            <div class="chart-container">
+                <canvas id="bugChart"></canvas>
+                <div id="bugChartCenterText" class="chart-center-text"></div>
+            </div>
+        </div>
+        <div class="card" onclick="toggleTable('techStoryContent')">
+            <div class="chart-container">
+                <canvas id="techStoryChart"></canvas>
+                <div id="techStoryChartCenterText" class="chart-center-text"></div>
+            </div>
+        </div>
+        <div class="card" onclick="toggleTable('techDebtContent')">
+            <div class="chart-container">
+                <canvas id="techDebtChart"></canvas>
+                <div id="techDebtChartCenterText" class="chart-center-text"></div>
+            </div>
+        </div>
+        <div class="card" onclick="toggleTable('spikeContent')">
+            <div class="chart-container">
+                <canvas id="spikeChart"></canvas>
+                <div id="spikeChartCenterText" class="chart-center-text"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats-container">
+
+        <button class="collapsible styling" onclick="toggleTable('sprintAutomationContent', 'InSprint Automation')">InSprint Automation</button>
+        <div class="content" id="sprintAutomationContent">
+            <table class="issue-table" id="sprintAutomationTable">
+                <thead>
+                    <tr>
+                        <th class="sortable">Priority</th>
+                        <th class="sortable">Key</th>
+                        <th class="sortable">Summary</th>
+                        <th class="sortable">Status</th>
+                        <th class="sortable">Test Case</th>
+                        <th class="sortable">Test Case Count</th>
+                        <th class="sortable">Release Name</th>
+                        <th class="sortable" id="inSprintSP">Story Points</th>
+                        <!--<th>Linked Issue</th>-->
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <button class="collapsible styling" onclick="toggleTable('storyContent', 'Stories')">Stories</button>
+        <div class="content" id="storyContent">
+            <table class="issue-table" id="storyTable">
+                <thead>
+                    <tr>
+                        <th class="sortable">Priority</th>
+                        <th class="sortable">Key</th>
+                        <th class="sortable">Summary</th>
+                        <th class="sortable">Status</th>
+                        <th class="sortable">Test Case</th>
+                        <th class="sortable">Test Case Count</th>
+                        <th class="sortable">Release Name</th>
+                        <th class="sortable" id="StorySP">Story Points</th>
+                        <!--<th>Linked Issue</th>-->
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+
+        <button class="collapsible styling" onclick="toggleTable('bugContent', 'Defects')">Defects</button>
+        <div class="content" id="bugContent">
+            <table class="issue-table" id="bugTable">
+                <thead>
+                    <tr>
+                        <th class="sortable">Priority</th>
+                        <th class="sortable">Key</th>
+                        <th class="sortable">Summary</th>
+                        <th class="sortable">Status</th>
+                        <th class="sortable">Test Case</th>
+                        <th class="sortable">Test Case Count</th>
+                        <th class="sortable">Release Name</th>
+                        <th class="sortable" id="BugSP">Story Points</th>
+                        <!--<th>Linked Issue</th>-->
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <button class="collapsible styling" onclick="toggleTable('techStoryContent', 'Tech Stories')">Tech Stories</button>
+        <div class="content" id="techStoryContent">
+            <table class="issue-table" id="techStoryTable">
+                <thead>
+                    <tr>
+                        <th class="sortable">Priority</th>
+                        <th class="sortable">Key</th>
+                        <th class="sortable">Summary</th>
+                        <th class="sortable">Status</th>
+                        <th class="sortable">Test Case</th>
+                        <th class="sortable">Test Case Count</th>
+                        <th class="sortable">Release Name</th>
+                        <th class="sortable" id="TechStorySP">Story Points</th>
+                        <!--<th>Linked Issue</th>-->
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <button class="collapsible styling" onclick="toggleTable('techDebtContent', 'TechDebt')">TechDebt</button>
+        <div class="content" id="techDebtContent">
+            <table class="issue-table" id="techDebtTable">
+                <thead>
+                    <tr>
+                        <th class="sortable">Priority</th>
+                        <th class="sortable">Key</th>
+                        <th class="sortable">Summary</th>
+                        <th class="sortable">Status</th>
+                        <th class="sortable">Test Case</th>
+                        <th class="sortable">Test Case Count</th>
+                        <th class="sortable">Release Name</th>
+                        <th class="sortable" id="SpikeSP">Story Points</th>
+                        <!--<th>Linked Issue</th>-->
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <button class="collapsible styling" onclick="toggleTable('spikeContent', 'Spikes')">Spikes</button>
+        <div class="content" id="spikeContent">
+            <table class="issue-table" id="spikeTable">
+                <thead>
+                    <tr>
+                        <th>Priority</th>
+                        <th>Key</th>
+                        <th>Summary</th>
+                        <th>Status</th>
+                        <th>Test Case</th>
+                        <th>Test Case Count</th>
+                        <th>Release Name</th>
+                        <th>Story Points</th>
+                        <th>Linked Issue</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+    </div>
+    <script>
+        function toggleTable(contentId, tableName) {
+            var content = document.getElementById(contentId);
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+            } else {
+                var allContents = document.querySelectorAll('.content');
+                allContents.forEach(function (item) {
+                    if (item.id !== contentId && item.classList.contains('expanded')) {
+                        item.classList.remove('expanded');
+                    }
+                });
+                content.classList.add('expanded');
+            }
+        }
+
+
+
+        function toggleNestedContent(id) {
+            var nestedContent = document.getElementById(id);
+            nestedContent.style.display = "block";
+        }
+
+
+        document.addEventListener('DOMContentLoaded', async function () {
+            let data;
+
+            try {
+                const response = await fetch('jira_data_23546.json');
+                data = await response.json(); 
+                await updateTableAndChart();
+            } catch (error) {
+                //  console.error('Failed to fetch from localhost, using local JSON file', error);
+                const response = await fetch('http://localhost:3000/jira');
+                data = await response.json();
+            }
+
+            function toggleNestedTable(button) {
+                var parentRow = button.closest('tr');
+                var nestedTable = parentRow.nextElementSibling.querySelector('.nested-table');
+                if (nestedTable) {
+                    if (nestedTable.style.display === "none" || nestedTable.style.display === "") {
+                        nestedTable.style.display = "table";
+                        button.textContent = "Collapse";
+                    } else {
+                        nestedTable.style.display = "none";
+                        button.textContent = "Expand";
+                    }
+                }
+            }
+
+
+
+            // Function to calculate total test cases for each issue type and for Sprint Automation
+            function calculateTestCasesByStatus(issues) {
+                const testCaseCounts = {
+                    'Manual': { completed: 0, notCompleted: 0 },
+                    'Automation': { completed: 0, notCompleted: 0 }
+                };
+
+                issues.forEach(issue => {
+                    const testCaseCount = parseInt(issue.fields.testCaseCount, 10) || 0;
+                    const status = issue.fields.status.name;
+                    const isCompleted = status === 'Done' || status === 'Closed';
+                    const labels = issue.fields.labels || [];
+                    const isAutomation = labels.includes('SprintAutomation');
+                    const isManual = labels.includes('Manual');
+
+                    if (isAutomation) {
+                        if (isCompleted) {
+                            testCaseCounts['Automation'].completed += testCaseCount;
+                        } else {
+                            testCaseCounts['Automation'].notCompleted += testCaseCount;
+                        }
+                    }
+
+                    if (isManual) {
+                        if (isCompleted) {
+                            testCaseCounts['Manual'].completed += testCaseCount;
+                        } else {
+                            testCaseCounts['Manual'].notCompleted += testCaseCount;
+                        }
+                    }
+                });
+
+                return testCaseCounts;
+            }
+
+            const testCaseCountsByStatus = calculateTestCasesByStatus(data.issues);
+
+            // Function to calculate total test cases for manual and automation issues
+            function calculateTotalTestCases(issues) {
+                let totalManualTestCases = 0;
+                let totalAutomationTestCases = 0;
+
+                issues.forEach(issue => {
+                    const testCaseCount = parseInt(issue.fields.testCaseCount, 10) || 0;
+                    const labels = issue.fields.labels || [];
+                    const isAutomation = labels.includes('SprintAutomation');
+                    const isManual = labels.includes('Manual');
+
+                    if (isAutomation) {
+                        totalAutomationTestCases += testCaseCount;
+                    }
+
+                    if (isManual) {
+                        totalManualTestCases += testCaseCount;
+                    }
+                });
+
+                return { totalManualTestCases, totalAutomationTestCases };
+            }
+
+            const totalTestCases = calculateTotalTestCases(data.issues);
+
+            // Function to update table headers with total test cases for each issue type
+                function updateTableWithTestCaseCounts() {
+                const manualCompleted = document.getElementById('ManualCompletedTestCases');
+                const manualNotCompleted = document.getElementById('ManualNotCompletedTestCases');
+                const manualTotal = document.getElementById('totalTestCases');
+                const automationCompleted = document.getElementById('AutomationCompletedTestCases');
+                const automationNotCompleted = document.getElementById('AutomationNotCompletedTestCases');
+                const automationTotal = document.getElementById('AutototalTestCases');
+
+                manualCompleted.textContent = testCaseCountsByStatus['Manual'].completed;
+                manualNotCompleted.textContent = testCaseCountsByStatus['Manual'].notCompleted;
+                manualTotal.textContent = Math.max(0, totalTestCases.totalManualTestCases);
+
+                automationCompleted.textContent = testCaseCountsByStatus['Automation'].completed;
+                automationNotCompleted.textContent = testCaseCountsByStatus['Automation'].notCompleted;
+                automationTotal.textContent = totalTestCases.totalAutomationTestCases;
+            }
+
+            updateTableWithTestCaseCounts();
+
+
+            // Function to calculate total test cases
+            function calculateAutoTotalTestCases(issues) {
+                let AutototalTestCases = 0;
+                issues.forEach(issue => {
+                    if (issue.fields && issue.fields.testCaseCount && issue.fields.labels && issue.fields.labels.includes('SprintAutomation')) {
+                        AutototalTestCases += parseInt(issue.fields.testCaseCount, 10);
+                    }
+                });
+                return AutototalTestCases;
+            }
+
+            const AutototalTestCases = calculateAutoTotalTestCases(data.issues);
+
+            // Update table headers with total test cases
+            document.getElementById('AutototalTestCases').textContent = AutototalTestCases;
+
+
+            // Function to calculate total test cases for each issue type and for Sprint Automation
+            function calculateTotalTestCasesByType(issues) {
+                const testCaseCounts = {
+                    'Story': 0,
+                    'Bug': 0,
+                    'Tech Story': 0,
+                    'TechDebt': 0,
+                    'Spike': 0,
+                    'SprintAutomation': 0
+                };
+
+                issues.forEach(issue => {
+                    const issueType = issue.fields.issuetype.name;
+                    if (issue.fields.testCaseCount) {
+                        testCaseCounts[issueType] += parseInt(issue.fields.testCaseCount, 10);
+                    }
+                    // Check for "SprintAutomation" label
+                    if (issue.fields.labels && issue.fields.labels.includes('SprintAutomation')) {
+                        testCaseCounts['SprintAutomation'] += parseInt(issue.fields.testCaseCount, 10);
+                    }
+                });
+
+                return testCaseCounts;
+            }
+
+            const totalTestCasesByType = calculateTotalTestCasesByType(data.issues);
+
+            // Function to update table headers with total test cases for each issue type
+            function updateTableHeadersWithTotalTestCases() {
+                const headers = {
+                    'Story': document.getElementById('storyTable').querySelector('thead'),
+                    'Bug': document.getElementById('bugTable').querySelector('thead'),
+                    'Tech Story': document.getElementById('techStoryTable').querySelector('thead'),
+                    'TechDebt': document.getElementById('techDebtTable').querySelector('thead'),
+                    'Spike': document.getElementById('spikeTable').querySelector('thead'),
+                    'SprintAutomation': document.getElementById('sprintAutomationTable').querySelector('thead')
+                };
+
+                Object.keys(headers).forEach(issueType => {
+                    if (headers[issueType]) {
+                        const th = headers[issueType].querySelector('th:nth-child(6)');
+                        if (th) {
+                            th.textContent = `Test Cases (${totalTestCasesByType[issueType]})`;
+                        }
+                    }
+                });
+            }
+
+            updateTableHeadersWithTotalTestCases();
+
+            // Function to populate tables for each issue type
+            function populateTables(issues) {
+                const tableBodies = {
+                    'Story': document.getElementById('storyTable').querySelector('tbody'),
+                    'Bug': document.getElementById('bugTable').querySelector('tbody'),
+                    'Tech Story': document.getElementById('techStoryTable').querySelector('tbody'),
+                    'TechDebt': document.getElementById('techDebtTable').querySelector('tbody'),
+                    'Spike': document.getElementById('spikeTable').querySelector('tbody'),
+                    'SprintAutomation': document.getElementById('sprintAutomationTable').querySelector('tbody')
+                };
+
+                issues.forEach(issue => {
+                    const { issuetype, status, summary, parent, customfield_1005, testCaseCount, priority, labels } = issue.fields || {};
+                    const issueType = issuetype ? issuetype.name : 'Unknown';
+                    const issueKey = issue.key;
+                    const issueStatus = status ? status.name : 'Unknown';
+                    const priority1 = priority ? priority.name : 'Unknown';
+                    const formattedTestCase = (issue.fields.testCase || '').replace(/\n/g, '<br>').replace('Acceptance Criteria: ', '');
+                    const formattedTestCaseCount = testCaseCount || 0;
+                    const formattedCustomfield10005 = customfield_1005 || 0;
+
+                    const row = `<tr>
+                        <td>${priority1}</td>
+                        <td><a href="https://eaflood.atlassian.net//browse/${issueKey}" target="_blank">${issueKey}</a></td>
+                        <td>${summary}</td>
+                        <td>${issueStatus}</td>
+                        <td>${formattedTestCase}</td>
+                        <td>${formattedTestCaseCount}</td>
+                        <td>${issue.fields.releaseName}</td>
+                        <td>${formattedCustomfield10005}</td>
+                    </tr>`;
+
+                    let rowInserted = false;
+
+                    // Check for "SprintAutomation" label and insert into the SprintAutomation table
+                    if (labels && labels.includes('SprintAutomation')) {
+                        tableBodies['SprintAutomation'].insertAdjacentHTML('beforeend', row);
+                        rowInserted = true; // Mark as inserted to avoid duplication
+                    }
+
+                    // Insert into the specific issue type table if not already inserted
+                    if (tableBodies[issueType] && !rowInserted) {
+                        tableBodies[issueType].insertAdjacentHTML('beforeend', row);
+                    }
+                });
+            }
+
+            const firstIssue = data.issues ? data.issues[0] : null;
+            const projectName = firstIssue && firstIssue.fields.project ? firstIssue.fields.project.name : "Not Available";
+            let sprintName = "Not Available";
+            let sprintId = "Not Available"
+
+            if (firstIssue && firstIssue.fields && firstIssue.fields.customfield_10007 && firstIssue.fields.customfield_10007.length > 0) {
+                sprintName = firstIssue.fields.customfield_10007[0].name;
+                sprintId = firstIssue.fields.customfield_10007[0].id;
+            }
+
+            document.getElementById('projectName').textContent = `${projectName} (NIRMS & NIPTS)`;
+
+            const issues = data.issues;
+            const stats = data.stats;
+            const totalIssues = issues.length;
+
+            function calculateStoryPoints(issues) {
+                let total = 0;
+                let completed = 0;
+                let inProgress = 0;
+
+                issues.forEach(issue => {
+                    if (issue.fields && issue.fields.customfield_10005) {
+                        total += issue.fields.customfield_10005;
+                        if (issue.fields.status.name === "Done") {
+                            completed += issue.fields.customfield_10016;
+                        } else if (issue.fields.status.name === "In Progress") {
+                            inProgress += issue.fields.customfield_10005;
+                        }
+                    }
+                });
+
+                return { total, completed, inProgress };
+            }
+
+            // Get the story points
+            const { total, completed, inProgress } = calculateStoryPoints(data.issues);
+
+            const sprintStartDate = new Date(firstIssue.fields.customfield_10007[0].startDate.slice(0, 10));
+            const activeSprintName = sprintName;
+
+
+
+            document.getElementById('sprintName').textContent = `Current Sprint : ${sprintName}`;
+            document.getElementById('sprintStartDate').textContent = `Start Date : ${firstIssue.fields.customfield_10007[0].startDate.slice(0, 10)} |`;
+            document.getElementById('sprintEndDate').textContent = `End Date : ${firstIssue.fields.customfield_10007[0].endDate.slice(0, 10)}`;
+            document.getElementById('sprintGoal').textContent = `Goals : ${firstIssue.fields.customfield_10007[0].goal}`;
+            document.getElementById('total-count').textContent = total;
+            document.getElementById('total-sps').textContent = totalIssues;
+            document.getElementById('completed-count').textContent = stats.completed.count;
+            document.getElementById('completed-story-points').textContent = stats.completed.storyPoints;
+            document.getElementById('not-completed-count').textContent = stats.notCompleted.count;
+            document.getElementById('not-completed-story-points').textContent = stats.notCompleted.storyPoints;
+            // document.getElementById('planned-count').textContent = stats.plannedAtStart.count;
+            // document.getElementById('planned-story-points').textContent = stats.plannedAtStart.storyPoints;
+            document.getElementById('StorySP').textContent = "Story Points (" + stats.storyPointsByType.Story + ")";
+            document.getElementById('BugSP').textContent = "Story Points (" + stats.storyPointsByType.Bug + ")";
+            document.getElementById('TechStorySP').textContent = "Story Points (" + stats.storyPointsByType["Tech Story"] + ")";
+            document.getElementById('SpikeSP').textContent = "Story Points (" + stats.storyPointsByType.TechDebt + ")";
+
+            //document.getElementById('estimatedIssueCount').textContent = data.estimatedMetrics.estimatedIssueCount;
+            //document.getElementById('estimatedIssueStoryPoint').textContent = data.estimatedMetrics.estimatedStoryPoints;
+
+            let toalSP = 0;
+            let storyCount = 0;
+            let bugCount = 0;
+            let storyStatusCounts = { "Completed": 0, "Not Completed": 0 };
+            let bugStatusCounts = { "Completed": 0, "Not Completed": 0 };
+            let techStoryCount = 0;
+            let techDebtCount = 0;
+            let spikeCount = 0;
+            let techStoryStatusCounts = { "Completed": 0, "Not Completed": 0 };
+            let techDebtStatusCounts = { "Completed": 0, "Not Completed": 0 };
+            let spikeStatusCounts = { "Completed": 0, "Not Completed": 0 };
+            let StoryPointCounts = 0;
+            let sprintAutomationCount = 0;
+            let sprintAutomationStatusCounts = { 'Completed': 0, 'Not Completed': 0 };
+
+
+            const storyTableBody = document.getElementById('storyTable').querySelector('tbody');
+            const bugTableBody = document.getElementById('bugTable').querySelector('tbody');
+            const techStoryTableBody = document.getElementById('techStoryTable').querySelector('tbody');
+            const techDebtTableBody = document.getElementById('techDebtTable').querySelector('tbody');
+            const spikeTableBody = document.getElementById('spikeTable').querySelector('tbody');
+
+            issues.forEach(issue => {
+                const { issuetype, status, summary, parent, customfield_1005, priority
+                } = issue.fields;
+                const issueKey = issue.key;
+                const issueType = issuetype.name;
+                const issueStatus = status.name;
+                const priorty1 = priority.name
+
+                const storyPoint = issue.fields.customfield_10005;
+                const issueCompletionStatus = (issueStatus === "Done" || issueStatus === "Closed" || issueStatus === "Ready for PO") ? "Completed" : "Not Completed";
+
+
+
+                const row = `<tr>
+                                     <td>${priorty1}</td>
+                                     <td><a href="https://eaflood.atlassian.net//browse/${issue.key}" target="_blank">${issue.key}</a></td>
+                                     <td>${summary}</td>
+                                     <td>${issueStatus}</td>
+                                     <td>${issue.fields.testCase.replace(/\n/g, '<br>')}</td>
+                                     <td>${issue.fields.testCaseCount}</td>
+                                     <td>${issue.fields.releaseName}</td>
+                                     <td>${storyPoint}</td>
+                                     </tr>`;
+
+
+                switch (issueType) {
+                    case 'Story':
+                        storyCount++;
+                        storyTableBody.insertAdjacentHTML('beforeend', row);
+                        storyStatusCounts[issueCompletionStatus] = (storyStatusCounts[issueCompletionStatus] || 0) + 1;
+                        break;
+                    case 'Bug':
+                        bugCount++;
+                        bugTableBody.insertAdjacentHTML('beforeend', row);
+                        bugStatusCounts[issueCompletionStatus] = (bugStatusCounts[issueCompletionStatus] || 0) + 1;
+                        break;
+                    case 'Tech Story':
+                        techStoryCount++;
+                        techStoryTableBody.insertAdjacentHTML('beforeend', row);
+                        techStoryStatusCounts[issueCompletionStatus] = (techStoryStatusCounts[issueCompletionStatus] || 0) + 1;
+                        break;
+                    case 'TechDebt':
+                        techDebtCount++;
+                        techDebtTableBody.insertAdjacentHTML('beforeend', row);
+                        techDebtStatusCounts[issueCompletionStatus] = (techDebtStatusCounts[issueCompletionStatus] || 0) + 1;
+                        break;
+                    case 'Spike':
+                        spikeCount++;
+                        spikeTableBody.insertAdjacentHTML('beforeend', row);
+                        spikeStatusCounts[issueCompletionStatus] = (spikeStatusCounts[issueCompletionStatus] || 0) + 1;
+                        break;
+                    default:
+                        break;
+                }
+
+                // For SprintAutomation label
+                if (issue.fields.labels.includes('SprintAutomation')) {
+                    document.getElementById('sprintAutomationTable').querySelector('tbody').insertAdjacentHTML('beforeend', row);
+                    sprintAutomationCount++;
+                    sprintAutomationStatusCounts[issueCompletionStatus]++;
+                }
+            });
+
+            async function updateTableAndChart() {
+                // Update the table
+                document.getElementById('not-completed-count').textContent = data.stats.notCompleted.count;
+                document.getElementById('completed-count').textContent = data.stats.completed.count;
+                document.getElementById('total-count').textContent = data.stats.total.count;
+                document.getElementById('not-completed-story-points').textContent = data.stats.notCompleted.storyPoints;
+                document.getElementById('completed-story-points').textContent = data.stats.completed.storyPoints;
+                document.getElementById('total-sps').textContent = data.stats.total.storyPoints;
+                document.getElementById('estimatedIssueCount').textContent = data.estimatedMetrics.estimatedIssueCount;
+                document.getElementById('estimatedStoryPoints').textContent = data.estimatedMetrics.estimatedStoryPoints;
+                document.getElementById('completedIssueCount').textContent = data.estimatedMetrics.completedIssueCount;
+                document.getElementById('completedStoryPoints').textContent = data.estimatedMetrics.completedStoryPoints;
+                document.getElementById('removedIssueCount').textContent = data.estimatedMetrics.allConsideredIssueCount - data.estimatedMetrics.completedIssueCount;
+
+                // Extract data for the chart
+                const estimatedIssues = data.estimatedMetrics.estimatedIssueCount;
+                const completedIssues = data.estimatedMetrics.completedIssueCount;
+                const notCompletedIssues = data.stats.notCompleted.count;
+                const estimatedStoryPoints = data.estimatedMetrics.estimatedStoryPoints;
+                const completedStoryPoints = data.estimatedMetrics.completedStoryPoints;
+                const notCompletedStoryPoints = data.stats.notCompleted.storyPoints;
+                const allConsideredIssueCount = data.estimatedMetrics.allConsideredIssueCount;
+                var removedIssueCount = (allConsideredIssueCount - completedIssues);
+
+
+                // Create the bar chart
+                const ctx = document.getElementById('barChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Issue', 'Story Points'],
+                        datasets: [
+                            {
+                                label: 'Estimated',
+                                data: [estimatedIssues, estimatedStoryPoints],
+                                backgroundColor: 'rgba(54, 162, 235, 1)',
+                                borderColor: 'rgba(54, 162, 235, 2)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Completed',
+                                data: [completedIssues, completedStoryPoints],
+                                backgroundColor: 'rgba(46, 204, 113, 1)',
+                                borderColor: 'rgba(46, 204, 113, 2)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'NotCompleted',
+                                data: [notCompletedIssues, notCompletedStoryPoints],
+                                backgroundColor: 'rgba(255, 206, 86,1)',
+                                borderColor: 'rgba(255, 206, 86,1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        plugins: {
+                            title: {
+                                display: false,
+                                text: 'Jira Metric'
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: context => `${context.dataset.label}: ${context.raw}`
+                                }
+                            },
+                            datalabels: {
+                                formatter: (value, context) => {
+                                    return value; // Display the value on top of the bar
+                                },
+                                color: '#000000', // Color of the data labels
+                                anchor: 'middle', // Position of the data labels
+                                align: 'middle', // Vertical alignment of the data labels
+                                offset: 2, // Offset of the data labels from the bar
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Value'
+                                }
+                            }
+                        }
+                    },
+                    plugins: [ChartDataLabels]
+                });
+            }
+
+
+            document.getElementById('storyChartCenterText').textContent = storyCount;
+            document.getElementById('bugChartCenterText').textContent = bugCount;
+            document.getElementById('techStoryChartCenterText').textContent = techStoryCount;
+            document.getElementById('techDebtChartCenterText').textContent = techDebtCount;
+            document.getElementById('spikeChartCenterText').textContent = spikeCount;
+            document.getElementById('sprintAutomationChartCenterText').textContent = sprintAutomationCount;
+
+            function createChart(chartId, statusCounts, label) {
+                const totalIssueCount = Object.values(statusCounts).reduce((sum, value) => sum + value, 0);
+
+                const data = {
+                    labels: Object.keys(statusCounts),
+                    datasets: [{
+                        data: totalIssueCount === 0 ? [1] : Object.values(statusCounts),
+                        backgroundColor: totalIssueCount === 0 ? ['rgba(235, 255, 255, 0.2)'] : [
+                            'rgb(0, 128, 0)', // Green for Completed
+                            'rgb(255, 165, 0)', // Amber for Not Completed
+                        ],
+                        hoverOffset: 5,
+                        borderColor: totalIssueCount === 0 ? ['rgba(211, 211, 211, 2)'] : 'transparent', // Makes border invisible
+                        borderWidth: 1, // Sets border width for the hollow ring
+
+                    }],
+                };
+
+                new Chart(document.getElementById(chartId), {
+                    type: 'doughnut',
+                    data: data,
+                    options: {
+                        plugins: {
+                            legend: {
+                                display: false,
+                                position: 'bottom'
+                            },
+                            title: {
+                                display: true,
+                                text: label,
+                                font: {
+                                    size: 16
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            createChart('storyChart', storyStatusCounts, 'Story Status');
+            createChart('bugChart', bugStatusCounts, 'Defect Status');
+            createChart('techStoryChart', techStoryStatusCounts, 'Tech Story Status');
+            createChart('techDebtChart', techDebtStatusCounts, 'TechDebt Status');
+            createChart('spikeChart', spikeStatusCounts, 'Spike Status');
+            createChart('sprintAutomationChart', sprintAutomationStatusCounts, 'InSprint Automation Status');
+
+            // Initialize Tablesort on the issue tables
+            new Tablesort(document.getElementById('storyTable'));
+            new Tablesort(document.getElementById('bugTable'));
+            new Tablesort(document.getElementById('techStoryTable'));
+            new Tablesort(document.getElementById('techDebtTable'));
+        });
+
+        async function fetchConfluenceData() {
+            try {
+                const response = await fetch('http://localhost:4000/fetchConfluenceData');
+                const data = await response.json();
+
+                document.getElementById('prdVersion').textContent = data.prdVersion;
+                document.getElementById('preVersion').textContent = data.preVersion;
+                document.getElementById('tstVersion').textContent = data.tstVersion;
+
+                const draftList = document.getElementById('draftList');
+                draftList.innerHTML = '';
+                data.drafts.forEach(draft => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<div class="stats-container"><strong>Release ${draft.title}</strong></div>`;
+
+                    // Add deployment details table
+                    const table = document.createElement('table');
+                    table.innerHTML = `
+                         <thead>
+                             <tr>
+                                 <th>Task/Release Activity</th>
+                                 <th>Date</th>
+                             </tr>
+                         </thead>
+                         <tbody>
+                             <tr>
+                                 <td id="deployment-status-tst-${draft.title.replace('.', '')}"></td>
+                                 <td id="deployment-date-tst-${draft.title.replace('.', '')}"></td>
+                             </tr>
+                             <tr>
+                                 <td id="deployment-status-pre-${draft.title.replace('.', '')}"></td>
+                                 <td id="deployment-date-pre-${draft.title.replace('.', '')}"></td>
+                             </tr>
+                             <tr>
+                                 <td id="deployment-status-prod-${draft.title.replace('.', '')}"></td>
+                                 <td id="deployment-date-prod-${draft.title.replace('.', '')}"></td>
+                             </tr>
+                         </tbody>`;
+                    li.appendChild(table);
+                    draftList.appendChild(li);
+
+                    // Extract and set deployment details
+                    const text = draft.content;
+                    const deployedTstRegex = /Deployed to TST/;
+                    const deployPreRegex = /Deploy to Pre-Prod Environment/;
+                    const deployProdRegex = /Deploy To Prod/;
+                    const dateRegex = /datetime="(\d{4}-\d{2}-\d{2})"/g;
+
+                    function findDateAfterStatus(text, statusRegex) {
+                        const statusIndex = text.search(statusRegex);
+                        if (statusIndex !== -1) {
+                            const dateMatch = [...text.slice(statusIndex).matchAll(dateRegex)];
+                            if (dateMatch.length > 0) {
+                                return dateMatch[0][1];
+                            }
+                        }
+                        return null;
+                    }
+
+                    const dateTst = findDateAfterStatus(text, deployedTstRegex);
+                    const datePre = findDateAfterStatus(text, deployPreRegex);
+                    const dateProd = findDateAfterStatus(text, deployProdRegex);
+
+                    const statusTstDiv = document.getElementById(`deployment-status-tst-${draft.title.replace('.', '')}`);
+                    const dateTstDiv = document.getElementById(`deployment-date-tst-${draft.title.replace('.', '')}`);
+                    const statusPreDiv = document.getElementById(`deployment-status-pre-${draft.title.replace('.', '')}`);
+                    const datePreDiv = document.getElementById(`deployment-date-pre-${draft.title.replace('.', '')}`);
+                    const statusProdDiv = document.getElementById(`deployment-status-prod-${draft.title.replace('.', '')}`);
+                    const dateProdDiv = document.getElementById(`deployment-date-prod-${draft.title.replace('.', '')}`);
+
+                    const deployedTstMatch = text.match(deployedTstRegex);
+                    const deployPreMatch = text.match(deployPreRegex);
+                    const deployProdMatch = text.match(deployProdRegex);
+
+                    if (deployedTstMatch && dateTst) {
+                        statusTstDiv.textContent = deployedTstMatch[0];
+                        dateTstDiv.textContent = dateTst;
+                    } else {
+                        statusTstDiv.textContent = 'Deployment Status (TST) not found';
+                        dateTstDiv.textContent = 'Deployment Date (TST) not found';
+                    }
+
+                    if (deployPreMatch && datePre) {
+                        statusPreDiv.textContent = deployPreMatch[0];
+                        datePreDiv.textContent = datePre;
+                    } else {
+                        statusPreDiv.textContent = 'Deployment Status (PRE) not found';
+                        datePreDiv.textContent = 'Deployment Date (PRE) not found';
+                    }
+
+                    if (deployProdMatch && dateProd) {
+                        statusProdDiv.textContent = deployProdMatch[0];
+                        dateProdDiv.textContent = dateProd;
+                    } else {
+                        statusProdDiv.textContent = 'Deployment Status (PROD) not found';
+                        dateProdDiv.textContent = 'Deployment Date (PROD) not found';
+                    }
+                });
+            } catch (error) {
+                console.error('Error fetching Confluence data:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', fetchConfluenceData);
+
+    </script>
+</body>
+</html>
