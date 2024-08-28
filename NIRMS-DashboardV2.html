@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sprint Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
+
+        /* Define colors for light theme */
+        :root {
+            --primary-color: #0052CC;
+            --secondary-color: #253858;
+            --background-color: #F4F5F7;
+            --text-color: #172B4D;
+            --border-color: #DFE1E6;
+            --chart-bg: #FFFFFF;
+        }
+
+        /* Define colors for dark theme */
+        [data-theme="dark"] {
+            --primary-color: #0052CC;
+            --secondary-color: #344563;
+            --background-color: #181B2A;
+            --text-color: #C7D1DA;
+            --border-color: #202945;
+            --chart-bg: #1E2235;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .header {
+            background-color: #4CAF50; /* Fresh green color */
+            color: white;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Align items to the left */
+        }
+
+        .header img {
+            margin-right: 10px; /* Adds some space between the logo and the title */
+            vertical-align: middle; /* Aligns the logo vertically with the text */
+            height: 50px; /* Adjust the logo size as needed */
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+            flex-grow: 1; /* Ensures the title takes up the remaining space */
+            text-align: center; /* Centers the title */
+        }
+
+        .container {
+            max-width: auto;
+            text-align: justify;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-wrapper, .issue-type {
+            background-color: var(--chart-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .chart-wrapper:hover, .issue-type h3:hover {
+            box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+            transform: translateY(-5px);
+        }
+
+        .issue-type {
+            width: 95vw; /* Set width to 95% of the viewport width */
+            max-width: auto; /* Optional: Set a max-width to prevent the table from becoming too wide on large screens */
+            margin: auto; /* Center the table horizontally */
+            overflow-x: auto; /* Ensures content is scrollable horizontally if it overflows */
+            background-color: var(--chart-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .issue-type h3 {
+            background-color: var(--secondary-color);
+            color: white;
+            margin: 0;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border-radius: 8px; /* Add this line to make corners round */
+        }
+
+        .issue-type h3:hover {
+            background-color: var(--primary-color);
+        }
+
+        .issue-type table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        .issue-type th, 
+        .issue-type td {
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+            background-color: white;
+            border-bottom: none;
+            font-size: 0.85rem;
+        }
+
+        .issue-type tr {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .issue-type th:nth-child(1), .issue-type td:nth-child(1) {
+            width: 50px; /* Adjusted width for the priority column */
+            text-align: center; /* Center-align the content */
+            background-color: #f0f0f0; /* Light grey background for priority icons */
+        }
+        .issue-type th:nth-child(2), .issue-type td:nth-child(2) { width: 10%; } /* Issue Number */
+        .issue-type th:nth-child(3), .issue-type td:nth-child(3) { width: 20%; } /* Summary */
+        .issue-type th:nth-child(4), .issue-type td:nth-child(4) { width: 8%; }  /* Status */
+        .issue-type th:nth-child(5), .issue-type td:nth-child(5) { width: 10%; } /* Assignee */
+        .issue-type th:nth-child(6), .issue-type td:nth-child(6) { width: 8%; }  /* Story Points */
+        .issue-type th:nth-child(7), .issue-type td:nth-child(7) { width: 25%;} /* Test Cases */
+        .issue-type th:nth-child(8), .issue-type td:nth-child(8) { width: 18%; } /* Linked Issues */
+        .issue-type th:nth-child(9), .issue-type td:nth-child(9) { width: 18%; } /* Parent Issue */
+
+        .issue-type td {
+            white-space: normal;
+            word-wrap: break-word;
+            vertical-align: top;
+            padding: 8px;
+        }
+
+        .linked-issues a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .linked-issues a:hover {
+            text-decoration: underline;
+        }
+
+        .issue-type th {
+            background-color: #f4f5f7; /* Light gray background for headers */
+            font-weight: 600;
+            color: #172b4d; /* Darker color for header text */
+        }
+
+        .issue-type tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .issue-type td a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .issue-type td a:hover {
+            color: #003d99;
+            text-decoration: underline;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chart-wrapper, .issue-type {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .stats-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 20px 0;
+            font-family: Arial, sans-serif;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .stats-table th,
+        .stats-table td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .stats-table th {
+            background-color: #0052CC;
+            color: #ffffff;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            font-size: 14px;
+        }
+
+        .stats-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .stats-table tr:hover {
+            background-color: #f1f3f5;
+        }
+
+        .stats-table td:first-child {
+            font-weight: bold;
+            color: #0052CC;
+        }
+
+        .sprint-details {
+            background-color: var(--chart-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .sprint-details h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .sprint-details p {
+            margin: 0.5rem 0;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--chart-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            flex: 1 1 200px;
+            margin-right: 1rem;
+        }
+
+        .stat-card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .stat-card p {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .issue-types {
+            width: 100%;
+        }
+
+        .issue-types h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .issue-type-bar {
+            height: 20px;
+            background-color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .issue-types {
+            width: 100%;
+        }
+
+        .issue-types h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .issue-type-bar {
+            height: 20px;
+            background-color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .sortable {
+            cursor: pointer;
+            position: relative;
+        }
+
+        .sortable::after {
+            content: '↕';
+            position: absolute;
+            right: 8px;
+            color: #999;
+        }
+
+        .sort-asc::after {
+            content: '↑';
+            color: #333;
+        }
+
+        .sort-desc::after {
+            content: '↓';
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .issue-type th, .issue-type td {
+                padding: 4px;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Additional styles for the linked issues table */
+        .linked-issues-table {
+            display: none;
+            width: 100%;
+            background-color: var(--chart-bg);
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .linked-issues-table th, .linked-issues-table td {
+            padding: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .linked-issues-table th {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .highlight-sprint-automation {
+            background-color: #e3fcef; /* Light green background for emphasis */
+        }
+
+        .sprint-automation-badge {
+            display: inline-block;
+            background-color: #4CAF50; /* Green background */
+            color: white;
+            padding: 2px 5px;
+            font-size: 12px;
+            border-radius: 5px;
+            margin-left: 5px;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 150%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        /* Footer styles */
+        .footer {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1rem 0;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Styles for the sprint stats section */
+        .sprint-stats {
+            background-color: var(--chart-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .sprint-stats h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .sprint-stats p {
+            margin: 0.5rem 0;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--chart-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            flex: 1 1 200px;
+            margin-right: 1rem;
+        }
+
+        .stat-card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .stat-card p {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        /* Styles for the collapsible sprint stats */
+        .collapsible-stats {
+            background-color: var(--chart-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            margin-bottom: 2rem;
+        }
+
+        .collapsible-stats .collapsible-header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .collapsible-stats .collapsible-header:hover {
+            background-color: var(--primary-color);
+        }
+
+        .collapsible-stats .stats-content {
+            display: none;
+            padding: 1rem;
+        }
+
+        .collapsible-stats .stats-content.active {
+            display: block;
+        }
+
+        /* Styles for the sprint stats cards */
+        .sprint-stats-card {
+            background-color: var(--chart-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .sprint-stats-card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .sprint-stats-card p {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        /* Styles for the sprint stats chart */
+        .sprint-stats-chart {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Styles for the sprint timeline */
+        .sprint-timeline {
+            background-color: var(--chart-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .sprint-timeline h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .sprint-timeline p {
+            margin: 0.5rem 0;
+        }
+
+        .timeline-item {
+            margin-bottom: 1rem;
+        }
+
+        .timeline-item .timeline-date {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .timeline-item .timeline-event {
+            margin-left: 1rem;
+        }
+
+        /* Styles for the doughnut chart */
+        .doughnut-chart {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        /* Styles for the issue type tables */
+        .issue-type-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+
+        .issue-type-table th,
+        .issue-type-table td {
+            padding: 0.5rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .issue-type-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+
+        .issue-type-table tbody tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Styles for the issue stats */
+        .issue-stats {
+            background-color: var(--chart-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .issue-stats h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .issue-stats p {
+            margin: 0.5rem 0;
+        }
+
+        /* Styles for the story points stats */
+        .story-points-stats {
+            background-color: var(--chart-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .story-points-stats h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .story-points-stats p {
+            margin: 0.5rem 0;
+        }
+
+        /* Styles for the manual test cases stats */
+        .manual-test-cases-stats {
+            background-color: var(--chart-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .manual-test-cases-stats h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .manual-test-cases-stats p {
+            margin: 0.5rem 0;
+        }
+
+        /* Styles for the in-sprint automation test cases stats */
+        .insprint-automation-test-cases-stats {
+            background-color: var(--chart-bg);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .insprint-automation-test-cases-stats h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .insprint-automation-test-cases-stats p {
+            margin: 0.5rem 0;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <img src="https://upload.wikimedia.org/wikipedia/en/d/d4/Department_for_Environment%2C_Food_and_Rural_Affairs_logo.svg" alt="Company Logo" style="height: 50px;"> <!-- Adjust the height as needed -->
+        <h1><i class="fas fa-chart-line"></i> Sprint Dashboard</h1>
+    </header>
+
+    <div class="container">
+        <div id="sprintDetailsContainer" class="sprint-details"></div>
+        <div class="charts-container" id="chartsContainer"></div>
+        <div id="issueTypeList"></div>
+        <div id="sprintChangesContainer"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <!-- &copy; 2023 Your Company Name. All rights reserved. -->
+            <!-- More information: <a href="https://yourcompany.com">yourcompany.com</a> -->
+        </div>
+    </footer>
+
+    <script>
+        // Define a fixed color mapping for statuses
+        const statusColors = {
+            'done': '#36B37E',  // green, represents completed tasks
+            'review': '#FF5630',  // red, represents tasks under review
+            'in dev': '#0052CC',  // blue, represents tasks ready for development
+            'ready for dev': '#FFAB00',  // yellow, represents tasks ready for development
+            'ready for merge': '#5243AA',  // indigo, represents tasks ready to be merged
+            'blocked': '#FF5630',  // red, represents blocked tasks
+            'test in snd': '#00B8D9',  // teal, represents testing in a sandbox environment
+            'test in test': '#00B8D9',  // teal, represents testing in a sandbox environment
+            'reopened': '#FF5630',  // red, represents tasks that have been reopened
+            'ready for po': '#36B37E',  // green, represents resolved tasks
+            'closed': '#999999',      
+            'ready for review': '#00B8D9',  // teal, represents tasks ready for review
+            'to do' : '#FFAB00',  // yellow, represents tasks ready for review
+            'in progress' : '#0052CC',  // blue, represents tasks in progress   
+            // Add more statuses as needed
+        };
+
+        // Data fetching and processing
+        async function fetchJiraData() {
+            try {
+                const response = await fetch('jira_data_3000.json');
+                const data = await response.json();
+                console.log('Fetched data:', data);
+                return data;
+            } catch (error) {
+                console.error('Error fetching data from jira-filter.json:', error);
+                return [];
+            }
+        }
+
+        function processJiraData(issues) {
+            if (!Array.isArray(issues)) {
+                console.error('Invalid issues data:', issues);
+                return {};
+            }
+
+            const issueTypeData = {};
+            const uniqueStatuses = new Set();
+            issues.forEach(issue => {
+                const { status, issuetype } = issue.fields;
+                const issueType = issuetype.name;
+                const statusName = status.name;
+                uniqueStatuses.add(statusName);
+
+                if (!issueTypeData[issueType]) {
+                    issueTypeData[issueType] = { statusCounts: {}, issues: {} };
+                }
+
+                issueTypeData[issueType].statusCounts[statusName] = (issueTypeData[issueType].statusCounts[statusName] || 0) + 1;
+                
+                if (!issueTypeData[issueType].issues[statusName]) {
+                    issueTypeData[issueType].issues[statusName] = [];
+                }
+                issueTypeData[issueType].issues[statusName].push(issue);
+            });
+            console.log('Unique statuses found:', Array.from(uniqueStatuses));
+            return issueTypeData;
+        }
+
+        // Chart creation
+        function createDoughnutChart(issueType, statusCounts, chartContainer) {
+            const canvas = document.createElement('canvas');
+            chartContainer.appendChild(canvas);
+
+            const ctx = canvas.getContext('2d');
+            const total = Object.values(statusCounts).reduce((a, b) => a + b, 0);
+            
+            const labels = Object.keys(statusCounts);
+            const data = Object.values(statusCounts);
+            const backgroundColor = labels.map(status => {
+                const color = statusColors[status.toLowerCase()] || '#999999'; // Default color if status not found
+                console.log(`Status: ${status}, Color: ${color}`);
+                return color;
+            });
+
+            const chart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: backgroundColor
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 10 } } },
+                        title: { display: true, text: issueType, font: { size: 14 } },
+                        datalabels: {
+                            color: '#fff',
+                            font: { weight: 'bold', size: 10 },
+                            formatter: (value, ctx) => {
+                                const sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                const percentage = (value * 100 / sum).toFixed(0) + "%";
+                                return `${value}\n(${percentage})`;
+                            }
+                        }
+                    },
+                    cutout: '50%',
+                    layout: { padding: 10 }
+                },
+                plugins: [ChartDataLabels, {
+                    id: 'centerText',
+                    afterDraw: (chart) => {
+                        const { ctx, chartArea } = chart;
+                        ctx.save();
+                        const centerX = (chartArea.left + chartArea.right) / 2;
+                        const centerY = (chartArea.top + chartArea.bottom) / 2;
+                        const innerRadius = chart.getDatasetMeta(0).data[0].innerRadius;
+                        
+                        const fontSize = Math.min(innerRadius * 1.5, 60);
+                        ctx.font = `bold ${fontSize}px Arial`;
+                        ctx.textBaseline = 'middle';
+                        ctx.textAlign = 'center';
+                        ctx.fillStyle = '#000';
+                        
+                        ctx.fillText(total.toString(), centerX, centerY);
+                        
+                        ctx.font = `bold ${fontSize / 3}px Arial`;
+                        ctx.fillText("Total", centerX, centerY + fontSize / 2);
+                        
+                        ctx.restore();
+                    }
+                }]
+            });
+
+            chartContainer.addEventListener('click', () => toggleIssueTable(issueType));
+
+            return chart;
+        }
+
+        // Issue table creation and management
+        function createIssueTable(issues, title) {
+            console.log(`Creating table for ${title}`, issues);
+
+            const section = document.createElement('div');
+            section.className = 'issue-type';
+            section.id = `table-${title.toLowerCase().replace(/\s+/g, '-')}`;
+            
+            const header = document.createElement('h3');
+            header.textContent = `${title}`;
+            section.appendChild(header);
+
+            const table = document.createElement('table');
+            table.style.display = 'none';
+
+            let totalTestCases = 0;
+            let totalStoryPoints = 0;
+            for (const statusIssues of Object.values(issues)) {
+                statusIssues.forEach(issue => {
+                    totalTestCases += issue.fields.testCaseCount || 0;
+                    totalStoryPoints += issue.fields.customfield_10005 || 0;
+                });
+            }
+
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th class="sortable" data-sort="priority">Priority</th>
+                        <th class="sortable" data-sort="issue">Issue Number</th>
+                        <th>Summary</th>
+                        <th class="sortable" data-sort="status">Status</th>
+                        <th class="sortable" data-sort="assignee">Assignee</th>
+                        <th>Story Points (Total: ${totalStoryPoints})</th>
+                        <th>Test Cases (Total: ${totalTestCases})</th>
+                        <th>Linked Issues</th>
+                        <th class="sortable" data-sort="parent">Parent Issue</th> <!-- New column for Parent Issue -->
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            `;
+
+            const tbody = table.querySelector('tbody');
+            if (!tbody) {
+                console.error('Table body not found');
+                return section;
+            }
+
+            const rows = [];
+            for (const [status, statusIssues] of Object.entries(issues)) {
+                statusIssues.forEach((issue) => {
+                    if (!issue || !issue.fields) {
+                        console.error('Invalid issue object', issue);
+                        return;
+                    }
+
+                    const formattedTestCases = issue.fields.testCase
+                        .split('\n')
+                        .map(tc => tc.trim())
+                        .filter(tc => tc.startsWith('AC'))
+                        .join('<br>');
+
+                    const linkedIssuesContent = issue.fields.issuelinks.map(link => {
+                        const linkedIssue = link.outwardIssue || link.inwardIssue;
+                        return `
+                            <div>
+                                <a href="https://eaflood.atlassian.net/browse/${linkedIssue.key}" target="_blank">${linkedIssue.key}</a>
+                                - ${linkedIssue.fields.summary} 
+                                (${linkedIssue.fields.status.name})
+                            </div>
+                        `;
+                    }).join('');
+
+                    // Replace priority text with icons
+                    const priorityIcon = getPriorityIcon(issue.fields.priority.name);
+
+                    const row = document.createElement('tr');
+                    // Check if the issue has the 'SprintAutomation' label and add the highlight class
+                    if (issue.fields.labels.includes('SprintAutomation')) {
+                        row.classList.add('highlight-sprint-automation');
+                    }
+                    row.innerHTML = `
+                        <td>${priorityIcon}</td>
+                        <td>
+                            <a href="https://eaflood.atlassian.net/browse/${issue.key}" target="_blank">${issue.key}</a>
+                            ${getSprintAutomationBadge(issue)}
+                        </td>
+                        <td title="${issue.fields.summary}">${issue.fields.summary}</td>
+                        <td>${issue.fields.status.name}</td>
+                        <td>${issue.fields.assignee ? issue.fields.assignee.displayName : 'Unassigned'}</td>
+                        <td>${issue.fields.customfield_10005 || 'N/A'}</td>
+                        <td>
+                            <div class="test-case-count">Count: ${issue.fields.testCaseCount}</div>
+                            <div class="test-cases">${formattedTestCases || 'No test cases'}</div>
+                        </td>
+                        <td>${linkedIssuesContent || 'No linked issues'}</td>
+                        <td>${issue.fields.parent ? `<a href="https://eaflood.atlassian.net/browse/${issue.fields.parent.key}" target="_blank">${issue.fields.parent.fields.summary}</a>` : 'No Parent'}</td> <!-- Parent Issue Link -->
+                    `;
+                    rows.push(row);
+                });
+            }
+
+            rows.forEach(row => tbody.appendChild(row));
+
+            section.appendChild(table);
+            header.addEventListener('click', () => toggleIssueTable(title));
+
+            // Add event listeners for sorting
+            table.querySelectorAll('th.sortable').forEach(th => {
+                th.addEventListener('click', () => {
+                    const sortBy = th.dataset.sort;
+                    sortTable(table, sortBy);
+                });
+            });
+
+            return section;
+        }
+
+        // Function to return the appropriate icon HTML based on priority
+        function getPriorityIcon(priority) {
+            switch (priority.toLowerCase()) {
+                case 'highest':
+                    return '<i class="fas fa-arrow-up" style="color: red;"></i>';
+                case 'high':
+                    return '<i class="fas fa-arrow-up" style="color: orange;"></i>';
+                case 'medium':
+                    return '<i class="fas fa-minus" style="color: yellow;"></i>';
+                case 'low':
+                    return '<i class="fas fa-arrow-down" style="color: green;"></i>';
+                case 'lowest':
+                    return '<i class="fas fa-arrow-down" style="color: blue;"></i>';
+                default:
+                    return '<i class="fas fa-question-circle" style="color: grey;"></i>'; // Default icon
+            }
+        }
+
+        function sortTable(table, sortBy) {
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            const isAscending = table.dataset.sortOrder === 'asc';
+
+            rows.sort((a, b) => {
+                let aValue, bValue;
+                switch (sortBy) {
+                    case 'priority':
+                        aValue = a.cells[0].textContent.trim();
+                        bValue = b.cells[0].textContent.trim();
+                        const priorityOrder = ['Highest', 'High', 'Medium', 'Low', 'Lowest'];
+                        return (priorityOrder.indexOf(aValue) - priorityOrder.indexOf(bValue)) * (isAscending ? 1 : -1);
+                    case 'issue':
+                        aValue = a.cells[1].textContent.trim();
+                        bValue = b.cells[1].textContent.trim();
+                        break;
+                    case 'status':
+                        aValue = a.cells[3].textContent.trim();
+                        bValue = b.cells[3].textContent.trim();
+                        break;
+                    case 'assignee':
+                        aValue = a.cells[4].textContent.trim();
+                        bValue = b.cells[4].textContent.trim();
+                        break;
+                    case 'parent':
+                        aValue = a.cells[8].textContent.trim();
+                        bValue = b.cells[8].textContent.trim();
+                        break;
+                }
+
+                if (aValue < bValue) return isAscending ? -1 : 1;
+                if (aValue > bValue) return isAscending ? 1 : -1;
+                return 0;
+            });
+
+            // Clear the table body
+            while (tbody.firstChild) {
+                tbody.removeChild(tbody.firstChild);
+            }
+
+            // Append sorted rows
+            rows.forEach(row => tbody.appendChild(row));
+
+            // Toggle sort order for next click
+            table.dataset.sortOrder = isAscending ? 'desc' : 'asc';
+
+            // Update sort indicators
+            table.querySelectorAll('th').forEach(th => {
+                th.classList.remove('sort-asc', 'sort-desc');
+            });
+            const currentTh = table.querySelector(`th[data-sort="${sortBy}"]`);
+            currentTh.classList.add(isAscending ? 'sort-asc' : 'sort-desc');
+        }
+
+        function toggleIssueTable(title) {
+            const tableId = `table-${title.toLowerCase().replace(/\s+/g, '-')}`;
+            const tableContainer = document.getElementById(tableId);
+            if (tableContainer) {
+                const table = tableContainer.querySelector('table');
+                if (table) {
+                    table.style.display = table.style.display === 'none' ? 'table' : 'none';
+                }
+            }
+        }
+
+        function displayIssueTypeList(issueTypeData) {
+            console.log('Displaying issue type list', issueTypeData);
+
+            const issueTypeList = document.getElementById('issueTypeList');
+            const chartsContainer = document.getElementById('chartsContainer');
+            
+            if (!issueTypeList || !chartsContainer) {
+                console.error('Required DOM elements not found');
+                return;
+            }
+            
+            issueTypeList.innerHTML = '';
+            chartsContainer.innerHTML = '';
+
+            Object.entries(issueTypeData).forEach(([issueType, data]) => {
+                console.log(`Processing ${issueType}`, data);
+
+                if (Object.keys(data.statusCounts).length > 0) {
+                    const section = createIssueTable(data.issues, issueType);
+                    if (section) {
+                        issueTypeList.appendChild(section);
+                    } else {
+                        console.error(`Failed to create table for ${issueType}`);
+                    }
+
+                    const chartWrapper = document.createElement('div');
+                    chartWrapper.className = 'chart-wrapper';
+                    chartsContainer.appendChild(chartWrapper);
+                    createDoughnutChart(issueType, data.statusCounts, chartWrapper);
+                } else {
+                    console.log(`No data for ${issueType}, skipping chart and table.`);
+                }
+            });
+
+            if (issueTypeList.children.length === 0) {
+                issueTypeList.innerHTML = '<p>No data available to display charts or tables.</p>';
+            }
+        }
+
+        function animateTableRows() {
+            const tables = document.querySelectorAll('table');
+            tables.forEach(table => {
+                table.querySelectorAll('tr').forEach((row, index) => {
+                    row.style.animation = `fadeInUp 0.3s ease-out forwards ${index * 0.05}s`;
+                    row.style.opacity = '0';
+                });
+            });
+        }
+
+        function displaySprintDetails(sprintDetails) {
+            const container = document.getElementById('sprintDetailsContainer');
+            if (!sprintDetails) {
+                container.innerHTML = '<p>No sprint details available.</p>';
+                return;
+            }
+            container.innerHTML = `
+                <h2>Sprint Details</h2
+                <p><strong>Sprint Name:</strong> ${sprintDetails.name}</p>
+                <p><strong>State:</strong> ${sprintDetails.state}</p>
+                <p><strong>Goal:</strong> ${sprintDetails.goal || 'No goal set'}</p>
+                <p><strong>Start Date:</strong> ${new Date(sprintDetails.startDate).toLocaleDateString()}</p>
+                <p><strong>End Date:</strong> ${new Date(sprintDetails.endDate).toLocaleDateString()}</p>
+            `;
+        }
+
+        function displayStats(stats) {
+            if (!stats || typeof stats !== 'object') {
+                console.error('Invalid stats data:', stats);
+                return;
+            }
+
+            const container = document.createElement('div');
+            container.className = 'stats-container';
+
+            // Combined card for Issue Stats
+            container.innerHTML = `
+                <div class="stat-card">
+                    <h3>Issue Stats</h3>
+                    <p><i class="fas fa-tasks"></i> Total: ${stats.total?.count || '0'}</p>
+                    <p><i class="fas fa-check"></i> Completed: ${stats.completed?.count || '0'}</p>
+                    <p><i class="fas fa-spinner"></i> In Progress: ${stats.notCompleted?.count || '0'}</p>
+                </div>
+            `;
+
+            // Combined card for Story Points
+            container.innerHTML += `
+                <div class="stat-card">
+                    <h3>Story Points</h3>
+                    <p><i class="fas fa-tasks"></i> Total: ${stats.total?.storyPoints || '0'}</p>
+                    <p><i class="fas fa-check"></i> Completed: ${stats.completed?.storyPoints || '0'}</p>
+                    <p><i class="fas fa-spinner"></i> In Progress: ${stats.notCompleted?.storyPoints || '0'}</p>
+                </div>
+            `;
+
+            // Test Cases and Story Points by Type remain separate
+            container.innerHTML += `
+                <div class="stat-card">
+                    <h3><i class="fas fa-cog"></i> Manual Test Cases</h3>
+                    <p><i class="fas fa-check"></i> Completed: ${stats.testCaseStats?.manual?.completed || '0'}</p>
+                    <p><i class="fas fa-spinner"></i> In Progress: ${stats.testCaseStats?.manual?.inProgress || '0'}</p>
+                </div>
+                <div class="stat-card">
+                    <h3><i class="fas fa-robot"></i> InSprint Automation Test Cases</h3>
+                    <p><i class="fas fa-check"></i> Completed: ${stats.testCaseStats?.inSprint?.completed || '0'}</p>
+                    <p><i class="fas fa-spinner"></i> In Progress: ${stats.testCaseStats?.inSprint?.inProgress || '0'}</p>
+                </div>
+                <div class="stat-card">
+                    <h3><i class="fas fa-filter"></i> Story Points by Type</h3>
+                    ${Object.entries(stats.storyPointsByType || {}).map(([type, points]) => `
+                        <div>
+                            <span>${type}: ${points} SP</span>
+                            <div class="issue-type-bar" style="width: ${(points / stats.total.storyPoints) * 100}%"></div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+
+            const sprintDetailsContainer = document.getElementById('sprintDetailsContainer');
+            if (!sprintDetailsContainer) {
+                console.error('Sprint details container not found');
+                return;
+            }
+            
+            try {
+                sprintDetailsContainer.after(container);
+            } catch (error) {
+                console.error('Error appending stats container:', error);
+            }
+        }
+
+        function displaySprintStats(sprintMetrics) {
+            const container = document.createElement('div');
+            container.className = 'stat-card';
+            container.innerHTML = `
+                <h3>Sprint Stats</h3>
+                <p><i class="fas fa-tasks"></i> Estimated Issues: ${sprintMetrics.estimatedIssueCount}</p>
+                <p><i class="fas fa-check"></i> Completed Issues: ${sprintMetrics.completedIssueCount}</p>
+                <p><i class="fas fa-tasks"></i> Estimated Story Points: ${sprintMetrics.estimatedStoryPoints}</p>
+                <p><i class="fas fa-check"></i> Completed Story Points: ${sprintMetrics.completedStoryPoints}</p>
+            `;
+
+            const sprintDetailsContainer = document.getElementById('sprintDetailsContainer');
+            if (!sprintDetailsContainer) {
+                console.error('Sprint details container not found');
+                return;
+            }
+            
+            try {
+                sprintDetailsContainer.after(container);
+            } catch (error) {
+                console.error('Error appending sprint stats container:', error);
+            }
+        }
+
+        function displaySprintChanges(sprintChanges) {
+            const container = document.getElementById('sprintChangesContainer');
+            if (!container) {
+                console.error('Sprint changes container not found');
+                return;
+            }
+
+            // Check if sprintChanges is defined and has the necessary properties
+            if (!sprintChanges || !sprintChanges.addedIssues || !sprintChanges.removedIssues || !sprintChanges.completedIssues) {
+                console.error('Invalid sprintChanges data:', sprintChanges);
+              
+                return;
+            }
+
+            container.innerHTML = `
+                <h2>Sprint Changes</h2>
+                <p>Added Issues: ${sprintChanges.addedIssues.join(', ') || 'None'}</p>
+                <p>Removed Issues: ${sprintChanges.removedIssues.join(', ') || 'None'}</p>
+                <p>Completed Issues: ${sprintChanges.completedIssues.join(', ')}</p>
+            `;
+        }
+
+        async function initDashboard() {
+            try {
+                const sprintDetailsContainer = document.getElementById('sprintDetailsContainer');
+                const chartsContainer = document.getElementById('chartsContainer');
+                const issueTypeList = document.getElementById('issueTypeList');
+
+                if (!sprintDetailsContainer || !chartsContainer || !issueTypeList) {
+                    throw new Error('Required DOM elements not found');
+                }
+
+                const data = await fetchJiraData();
+                console.log('Fetched data:', data);
+
+                if (!data || !data.issues || !Array.isArray(data.issues)) {
+                    throw new Error('Invalid data structure: issues array not found');
+                }
+
+                const issueTypeData = processJiraData(data.issues);
+                displayIssueTypeList(issueTypeData);
+                animateTableRows();
+
+                displaySprintDetails(data.sprintDetails);
+                displayStats(data.stats);
+                displaySprintStats(data.sprintMetrics);
+                displaySprintChanges(data.stats.sprintChanges);
+            } catch (error) {
+                console.error('Failed to initialize dashboard:', error);
+                const container = document.querySelector('.container');
+                if (container) {
+                    container.innerHTML = `<p>Error loading dashboard: ${error.message}</p>`;
+                } else {
+                    document.body.innerHTML = `<p>Error loading dashboard: ${error.message}</p>`;
+                }
+            }
+        }
+
+        function getStatusBadge(status) {
+            return status; // Return plain text status
+        }
+
+        function getSprintAutomationBadge(issue) {
+            if (issue.fields.labels.includes('SprintAutomation')) {
+                return '<div class="sprint-automation-badge"><i class="fas fa-robot"></i></div>';
+            }
+            return '';
+        }
+
+        document.addEventListener('DOMContentLoaded', initDashboard);
+    </script>
+</body>
+</html>
